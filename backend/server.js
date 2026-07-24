@@ -18,12 +18,22 @@ app.get('/health', (req, res) => {
 });
 
 async function start() {
-  await connectDB();
+  try {
+    await connectDB();
 
-  const port = process.env.PORT || 5000;
-  app.listen(port, () => {
-    logger.info(`Server running on port ${port}`);
-  });
+    const port = process.env.PORT || 5000;
+    const server = app.listen(port, () => {
+      logger.info(`Server running on port ${port}`);
+    });
+
+    server.on('error', (err) => {
+      logger.error({ err }, 'Server failed to start');
+      process.exitCode = 1;
+    });
+  } catch (err) {
+    logger.error({ err }, 'Startup failed');
+    process.exitCode = 1;
+  }
 }
 
 start();
