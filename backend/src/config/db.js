@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const logger = require('./logger');
+import mongoose from 'mongoose';
+import logger from './logger.js';
 
 async function connectDB() {
   try {
@@ -11,4 +11,4 @@ async function connectDB() {
   }
 }
 
-module.exports = connectDB;
+export default connectDB;

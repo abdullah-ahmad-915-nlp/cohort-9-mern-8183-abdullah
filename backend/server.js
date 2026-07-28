@@ -1,11 +1,10 @@
-require('dotenv').config();
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import pinoHttp from 'pino-http';
 
-const express = require('express');
-const cors = require('cors');
-const pinoHttp = require('pino-http');
-
-const logger = require('./src/config/logger');
-const connectDB = require('./src/config/db');
+import logger from './src/config/logger.js';
+import connectDB from './src/config/db.js';
 
 const app = express();
 
