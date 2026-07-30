@@ -13,7 +13,7 @@ async function findNoteById(id) {
 }
 
 async function updateNoteById(id, updates) {
-    return Note.findByIdAndUpdate(id, updates, { new: true });
+    return Note.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
 }
 
 async function deleteNoteById(id) {
