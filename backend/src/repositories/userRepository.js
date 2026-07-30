@@ -12,4 +12,8 @@ async function findUserById(id) {
     return User.findById(id);
 }
 
-export { createUser, findUserByEmail, findUserById };
+async function findUserByEmailWithPassword(email) {
+  return User.findOne({ email }).select('+password');
+}
+
+export { createUser, findUserByEmail, findUserById, findUserByEmailWithPassword };
