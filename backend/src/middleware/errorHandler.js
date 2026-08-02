@@ -3,10 +3,14 @@ import logger from '../config/logger.js';
 function errorHandler(err, _, res, next) {
   logger.error({ err }, 'Unhandled error');
 
-  const statusCode = err.statusCode || 500;
+  let statusCode = err.statusCode;
+
+  if (!Number.isInteger(statusCode) || statusCode < 400 || statusCode > 599) {
+    statusCode = 500;
+  }
 
   let message;
-  if (process.env.NODE_ENV === 'production' && statusCode === 500) {
+  if (process.env.NODE_ENV === 'production' && statusCode >= 500 && statusCode <= 599) {
     message = 'Internal server error';
   }
   else {
