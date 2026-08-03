@@ -1,20 +1,28 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import pinoHttp from 'pino-http';
 
 import logger from './src/config/logger.js';
 import connectDB from './src/config/db.js';
+import requestLogger from './src/middleware/requestLogger.js';
+import routes from './src/routes/index.js';
+import notFound from './src/middleware/notFound.js';
+import errorHandler from './src/middleware/errorHandler.js';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(pinoHttp({ logger }));
+app.use(requestLogger);
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
+
+app.use('/api', routes);
+
+app.use(notFound);
+app.use(errorHandler);
 
 async function start() {
   try {
