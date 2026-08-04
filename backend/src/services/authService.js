@@ -19,7 +19,19 @@ async function registerUser(name, email, password) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await createUser({ name, email, password: hashedPassword });
+    let user;
+
+    try {
+        user = await createUser({ name, email, password: hashedPassword });
+    }
+    catch (err) {
+        if (err.code === 11000) {
+            const conflictErr = new Error('User already exists');
+            conflictErr.statusCode = 409;
+            throw conflictErr;
+        }
+        throw err;
+    }
 
     const { password: _password, ...userWithoutPassword } = user.toObject();
     return userWithoutPassword;

@@ -10,19 +10,27 @@ async function authMiddleware(req, res, next) {
 
     const token = authHeader.split(' ')[1];
 
+    let decoded;
+
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+    }
+    catch (err) {
+        return res.status(401).json({ error: 'Invalid or expired token' });
+    }
+
+    try {
         const user = await findUserById(decoded.userId);
 
         if (!user) {
-            return res.status(401).json({ error: 'User no longer exists'});
+            return res.status(401).json({ error: 'User no longer exists' });
         }
 
         req.user = user;
         next();
     }
     catch (err) {
-        res.status(401).json({ error: 'Invalid or expired token'});
+        next(err);
     }
 }
 
