@@ -5,7 +5,7 @@ async function createNote(noteData) {
 }
 
 async function findNotesByOwner(ownerId) {
-    return Note.find({ owner: ownerId });
+    return Note.find({ owner: ownerId }).sort({ updatedAt: -1 });
 }
 
 async function findNoteById(id) {
