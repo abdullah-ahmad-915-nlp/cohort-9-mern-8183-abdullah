@@ -37,11 +37,14 @@ describe('notesRepository', () => {
         const newer = await createNote({ title: 'Newer', content: '...', owner: owner1 });
         await createNote({ title: 'Not mine', content: 'Content', owner: owner2 });
 
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        await updateNoteById(older._id, { title: 'Older, but just updated' });
+
         const results = await findNotesByOwner(owner1);
 
         expect(results).to.have.length(2);
-        expect(results[0]._id.toString()).to.equal(newer._id.toString());
-        expect(results[1]._id.toString()).to.equal(older._id.toString());
+        expect(results[0]._id.toString()).to.equal(older._id.toString());
+        expect(results[1]._id.toString()).to.equal(newer._id.toString());
     });
 
     it('findNoteById returns the correct note regardless of the owner', async () => {
@@ -63,13 +66,16 @@ describe('notesRepository', () => {
     it('updateNoteById rejects an invalid update due to runValidators', async () => {
         const created = await createNote({ title: 'Original', content: 'Content', owner: new mongoose.Types.ObjectId() });
 
+        let thrownError;
+
         try {
             await updateNoteById(created._id, { title: '' });
-            expect.fail('Expected update to fail validation');
         }
         catch (err) {
-            expect(err).to.exist;
+            thrownError = err;
         }
+
+        expect(thrownError).to.exist;
     });
 
     it('deleteNoteById removes the note from the database', async () => {
