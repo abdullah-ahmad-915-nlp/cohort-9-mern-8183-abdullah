@@ -24,4 +24,12 @@ async function login(req, res, next) {
     }
 }
 
-export { register, login };
+async function getMe(req, res, next) {
+    try {
+        res.status(200).json(req.user);
+    } catch (err) {
+        next(err);
+    }
+}
+
+export { register, login, getMe };
