@@ -8,8 +8,13 @@ const api = axios.create({
 let csrfToken = null;
 
 async function fetchCsrfToken() {
-    const response = await api.get('/csrf-token');
-    csrfToken = response.data.csrfToken;
+    try {
+        const response = await api.get('/csrf-token');
+        csrfToken = response.data.csrfToken;
+    } catch (err) {
+        csrfToken = null;
+        throw err;
+    }
 }
 
 api.interceptors.request.use(async (config) => {

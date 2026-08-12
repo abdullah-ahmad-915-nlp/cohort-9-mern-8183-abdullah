@@ -11,6 +11,11 @@ import routes from './src/routes/index.js';
 import notFound from './src/middleware/notFound.js';
 import errorHandler from './src/middleware/errorHandler.js';
 
+if (!process.env.CSRF_SECRET) {
+  logger.error('CSRF_SECRET is not set. Add it to your .env file before starting the server.');
+  process.exit(1);
+}
+
 const app = express();
 
 app.use(cors({
@@ -39,11 +44,11 @@ async function start() {
 
     server.on('error', (err) => {
       logger.error({ err }, 'Server failed to start');
-      process.exitCode = 1;
+      process.exit(1);
     });
   } catch (err) {
     logger.error({ err }, 'Startup failed');
-    process.exitCode = 1;
+    process.exit(1);
   }
 }
 

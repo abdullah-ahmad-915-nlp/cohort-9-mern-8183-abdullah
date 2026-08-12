@@ -38,7 +38,12 @@ function AuthProvider({ children }) {
         }
         finally {
             setUser(null);
-            await fetchCsrfToken();
+            try {
+                await fetchCsrfToken();
+            }
+            catch (err) {
+                // Empty
+            }
         }
     }
 
