@@ -2,13 +2,11 @@ import jwt from 'jsonwebtoken';
 import { findUserById } from '../repositories/userRepository.js';
 
 async function authMiddleware(req, res, next) {
-    const authHeader = req.headers.authorization;
-    
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ error: 'No token provided'});
-    }
+    const token = req.cookies.token;
 
-    const token = authHeader.split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ error: 'No token provided' });
+    }
 
     let decoded;
 

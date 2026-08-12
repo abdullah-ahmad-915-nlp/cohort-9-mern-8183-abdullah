@@ -1,9 +1,11 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import logger from './src/config/logger.js';
 import connectDB from './src/config/db.js';
+import { doubleCsrfProtection } from './src/config/csrf.js';
 import requestLogger from './src/middleware/requestLogger.js';
 import routes from './src/routes/index.js';
 import notFound from './src/middleware/notFound.js';
@@ -11,13 +13,15 @@ import errorHandler from './src/middleware/errorHandler.js';
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
-app.use(requestLogger);
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true,
+}));
 
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok' });
-});
+app.use(express.json());
+app.use(cookieParser());
+app.use(doubleCsrfProtection);
+app.use(requestLogger);
 
 app.use('/api', routes);
 

@@ -17,7 +17,23 @@ async function login(req, res, next) {
 
     try {
         const token = await loginUser(email, password);
-        res.status(200).json({ token });
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });        
+        res.status(200).json({ message: 'Logged in successfully' });
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+async function logout(req, res, next) {
+    try {
+        res.clearCookie('token');
+        res.status(200).json({ message: 'Logged out successfully' });
     }
     catch (err) {
         next(err);
@@ -32,4 +48,4 @@ async function getMe(req, res, next) {
     }
 }
 
-export { register, login, getMe };
+export { register, login, logout, getMe };
