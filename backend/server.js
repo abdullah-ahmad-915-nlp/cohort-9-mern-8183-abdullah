@@ -1,23 +1,32 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import logger from './src/config/logger.js';
 import connectDB from './src/config/db.js';
+import { doubleCsrfProtection } from './src/config/csrf.js';
 import requestLogger from './src/middleware/requestLogger.js';
 import routes from './src/routes/index.js';
 import notFound from './src/middleware/notFound.js';
 import errorHandler from './src/middleware/errorHandler.js';
 
+if (!process.env.CSRF_SECRET) {
+  logger.error('CSRF_SECRET is not set. Add it to your .env file before starting the server.');
+  process.exit(1);
+}
+
 const app = express();
 
-app.use(cors());
-app.use(express.json());
-app.use(requestLogger);
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true,
+}));
 
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok' });
-});
+app.use(express.json());
+app.use(cookieParser());
+app.use(doubleCsrfProtection);
+app.use(requestLogger);
 
 app.use('/api', routes);
 
@@ -35,11 +44,11 @@ async function start() {
 
     server.on('error', (err) => {
       logger.error({ err }, 'Server failed to start');
-      process.exitCode = 1;
+      process.exit(1);
     });
   } catch (err) {
     logger.error({ err }, 'Startup failed');
-    process.exitCode = 1;
+    process.exit(1);
   }
 }
 

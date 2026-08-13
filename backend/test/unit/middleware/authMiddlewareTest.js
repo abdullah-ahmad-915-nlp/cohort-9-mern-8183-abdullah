@@ -3,10 +3,10 @@ import sinon from 'sinon';
 import esmock from 'esmock';
 
 function mockRes() {
-  const res = {};
-  res.status = sinon.stub().returns(res);
-  res.json = sinon.stub().returns(res);
-  return res;
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns(res);
+    return res;
 }
 
 describe('authMiddleware', () => {
@@ -14,23 +14,10 @@ describe('authMiddleware', () => {
         sinon.restore();
     });
 
-    it('returns 401 if no authorization header is present', async () => {
+    it('returns 401 if no token cookie is present', async () => {
         const { authMiddleware } = await esmock('../../../src/middleware/authMiddleware.js');
 
-        const req = { headers: {} };
-        const res = mockRes();
-        const next = sinon.stub();
-
-        await authMiddleware(req, res, next);
-
-        expect(res.status.calledWith(401)).to.be.true;
-        expect(next.called).to.be.false;
-    });
-
-    it('returns 401 if the header does not start with "Bearer "', async () => {
-        const { authMiddleware } = await esmock('../../../src/middleware/authMiddleware.js');
-
-        const req = { headers: { authorization: 'Basic abc123' } };
+        const req = { cookies: {} };
         const res = mockRes();
         const next = sinon.stub();
 
@@ -47,7 +34,7 @@ describe('authMiddleware', () => {
             },
         });
 
-        const req = { headers: { authorization: 'Bearer badtoken' } };
+        const req = { cookies: { token: 'badtoken' } };
         const res = mockRes();
         const next = sinon.stub();
 
@@ -67,7 +54,7 @@ describe('authMiddleware', () => {
             },
         });
 
-        const req = { headers: { authorization: 'Bearer validtoken' } };
+        const req = { cookies: { token: 'validtoken' } };
         const res = mockRes();
         const next = sinon.stub();
 
@@ -75,6 +62,28 @@ describe('authMiddleware', () => {
 
         expect(res.status.calledWith(401)).to.be.true;
         expect(next.called).to.be.false;
+    });
+
+    it('forwards a database failure to next instead of returning 401', async () => {
+        const dbErr = new Error('connection lost');
+
+        const { authMiddleware } = await esmock('../../../src/middleware/authMiddleware.js', {
+            jsonwebtoken: {
+                default: { verify: sinon.stub().returns({ userId: '123' }) },
+            },
+            '../../../src/repositories/userRepository.js': {
+                findUserById: sinon.stub().rejects(dbErr),
+            },
+        });
+
+        const req = { cookies: { token: 'validtoken' } };
+        const res = mockRes();
+        const next = sinon.stub();
+
+        await authMiddleware(req, res, next);
+
+        expect(next.calledWith(dbErr)).to.be.true;
+        expect(res.status.called).to.be.false;
     });
     
     it('attaches req.user and calls next on valid token', async () => {
@@ -89,7 +98,7 @@ describe('authMiddleware', () => {
             },
         });
 
-        const req = { headers: { authorization: 'Bearer validtoken' } };
+        const req = { cookies: { token: 'validtoken' } };
         const res = mockRes();
         const next = sinon.stub();
 
