@@ -123,6 +123,20 @@ describe('notesService', () => {
             }
             catch (err) {
                 expect(err.statusCode).to.equal(400);
+                expect(err.message).to.equal('Title and content are required');
+            }
+        });
+
+        it('throws 400 if content is only an empty Tiptap paragraph', async () => {
+            const { updateNoteForUser } = await esmock('../../../src/services/notesService.js');
+
+            try {
+                await updateNoteForUser('user1', 'note1', { content: '<p></p>' });
+                expect.fail('Expected updateNoteForUser to throw');
+            }
+            catch (err) {
+                expect(err.statusCode).to.equal(400);
+                expect(err.message).to.equal('Title and content are required');
             }
         });
 

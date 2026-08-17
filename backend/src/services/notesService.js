@@ -1,7 +1,12 @@
 import { createNote, findNotesByOwner, findNoteById, updateNoteById, deleteNoteById } from "../repositories/notesRepository.js";
 
+function isContentEmpty(html) {
+    const stripped = html.replace(/<[^>]*>/g, '').trim();
+    return stripped.length === 0;
+}
+
 async function createNoteForUser(userId, title, content) {
-    if (!title || !content) {
+    if (!title || isContentEmpty(content)) {
         const err = new Error('Title and content are required');
         err.statusCode = 400;
         throw err;
@@ -35,14 +40,11 @@ async function getNoteForUser(userId, noteId) {
 }
 
 async function updateNoteForUser(userId, noteId, updates) {
-    if (updates.title !== undefined && !updates.title) {
-        const err = new Error('Title cannot be empty');
-        err.statusCode = 400;
-        throw err;
-    }
+    const titleInvalid = updates.title !== undefined && !updates.title;
+    const contentInvalid = updates.content !== undefined && isContentEmpty(updates.content);
 
-    if (updates.content !== undefined && !updates.content) {
-        const err = new Error('Content cannot be empty');
+    if (titleInvalid || contentInvalid) {
+        const err = new Error('Title and content are required');
         err.statusCode = 400;
         throw err;
     }

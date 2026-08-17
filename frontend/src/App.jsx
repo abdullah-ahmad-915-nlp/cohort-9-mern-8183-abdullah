@@ -4,6 +4,7 @@ import Landing from './pages/Landing.jsx';
 import Register from './pages/Register.jsx';
 import Login from './pages/Login.jsx';
 import Dashboard from './pages/Dashboard.jsx';
+import NoteEditor from './pages/NoteEditor.jsx';
 
 function App() {
   return (
@@ -17,6 +18,22 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notes/new"
+          element={
+            <ProtectedRoute>
+              <NoteEditor />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notes/:id"
+          element={
+            <ProtectedRoute>
+              <NoteEditor />
             </ProtectedRoute>
           }
         />
