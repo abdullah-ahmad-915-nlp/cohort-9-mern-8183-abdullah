@@ -10,11 +10,7 @@ function Dashboard() {
     const [fetchError, setFetchError] = useState('');
     const [fetchLoading, setFetchLoading] = useState(true);
     const [logoutLoading, setLogoutLoading] = useState(false);
-    const [newNoteLoading, setNewNoteLoading] = useState(false);
-    const [editNoteLoading, setEditNoteLoading] = useState(false);
-    const [deleteNoteLoading, setDeleteNoteLoading] = useState(false);
-    const [editingId, setEditingId] = useState(null);
-    const [deletingId, setDeletingId] = useState(null);
+    const [deletingIds, setDeletingIds] = useState(new Set());
 
     const { user, logout } = useAuth();
 
@@ -48,17 +44,11 @@ function Dashboard() {
     }
 
     function handleCreateNew() {
-        setNewNoteLoading(true);
         navigate('/notes/new');
-        setNewNoteLoading(false);
     }
 
     function handleNoteEdit(id) {
-        setEditNoteLoading(true);
-        setEditingId(id);
         navigate(`/notes/${id}`);
-        setEditNoteLoading(false);
-        setEditingId(null);
     }
 
     async function handleNoteDelete(id) {
@@ -69,19 +59,21 @@ function Dashboard() {
         }
 
         setError('');
-        setDeleteNoteLoading(true);
-        setDeletingId(id);
+        setDeletingIds((prev) => new Set(prev).add(id));
 
         try {
             await deleteNote(id);
-            setNotes(prevNotes => prevNotes.filter(note => note._id !== id));
+            setNotes((prevNotes) => prevNotes.filter((note) => note._id !== id));
         }
         catch (err) {
             setError(err.response?.data?.error || 'Failed to delete note');
         }
         finally {
-            setDeleteNoteLoading(false);
-            setDeletingId(null);
+            setDeletingIds((prev) => {
+                const next = new Set(prev);
+                next.delete(id);
+                return next;
+            });
         }
     }
 
@@ -93,23 +85,22 @@ function Dashboard() {
             {fetchLoading ? (
                 <p>Loading...</p>
             ) : fetchError ? (
-                <span>{fetchError}</span>
+                <span role="alert">{fetchError}</span>
             ) : (
                 <div>
-                    <button onClick={handleCreateNew} disabled={newNoteLoading}>{newNoteLoading ? 'Creating new note...' : 'Create new note'}</button>
+                    <button onClick={handleCreateNew}>Create new note</button>
                     {notes.length === 0 ? (
                         <p>No notes here. Create your first one!</p>
                     ) : (
                         <div>
                             <div>
-                                {error && <span>{error}</span>}
+                                {error && <span role="alert">{error}</span>}
                             </div>
                             {notes.map(note => (
                                 <NoteCard
                                     key={note._id}
                                     note={note}
-                                    isEditing={editingId === note._id}
-                                    isDeleting={deletingId === note._id}
+                                    isDeleting={deletingIds.has(note._id)}
                                     onEdit={() => handleNoteEdit(note._id)}
                                     onDelete={() => handleNoteDelete(note._id)}
                                 />

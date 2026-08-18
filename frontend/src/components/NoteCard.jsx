@@ -35,7 +35,7 @@ function NoteCard({ note, isEditing, isDeleting, onEdit, onDelete }) {
             <p>{preview}</p>
             <span>{formattedDate}, {formattedTime}</span>
             <div>
-                <button onClick={onEdit} disabled={isEditing}>{isEditing ? 'Editing...' : 'Edit'}</button>
+                <button onClick={onEdit} disabled={isDeleting}>Edit</button>
                 <button onClick={onDelete} disabled={isDeleting}>{isDeleting ? 'Deleting...' : 'Delete'}</button>
             </div>
         </div>

@@ -20,8 +20,10 @@ function NoteEditor() {
     const isMutating = saveLoading || deleteLoading;
 
     useEffect(() => {
+        setFetchError('');
+        setFetchLoading(isEditMode);
+
         if (!isEditMode) {
-            setFetchLoading(false);
             return;
         }
 
@@ -117,7 +119,7 @@ function NoteEditor() {
             {fetchLoading ? (
                 <p>Loading...</p>
             ) : fetchError ? (
-                <span>{fetchError}</span>
+                <span role="alert">{fetchError}</span>
             ) : (
                 <div>
                     <div>
@@ -142,7 +144,7 @@ function NoteEditor() {
                         </button>
                     </div>
                     <div>
-                        {error && <span>{error}</span>}
+                        {error && <span role="alert">{error}</span>}
                     </div>
                     <RichTextEditor
                         key={id || 'new'}

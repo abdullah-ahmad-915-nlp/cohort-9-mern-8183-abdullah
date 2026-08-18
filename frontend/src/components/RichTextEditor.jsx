@@ -276,20 +276,24 @@ function RichTextEditor({ content, onChange }) {
                                 {hoverDims.rows > 0 ? `${hoverDims.rows} x ${hoverDims.cols}` : 'Select size'}
                             </div>
                             <div className="table-grid">
-                                {Array.from({ length: TABLE_GRID_MAX }).map((_, colIndex) => {
-                                    const isHighlighted = rowIndex < hoverDims.rows && colIndex < hoverDims.cols;
-                                    return (
-                                        <button
-                                            key={colIndex}
-                                            type="button"
-                                            className={isHighlighted ? 'table-grid-cell active' : 'table-grid-cell'}
-                                            aria-label={`Insert table ${rowIndex + 1} by ${colIndex + 1}`}
-                                            onMouseEnter={() => setHoverDims({ rows: rowIndex + 1, cols: colIndex + 1 })}
-                                            onFocus={() => setHoverDims({ rows: rowIndex + 1, cols: colIndex + 1 })}
-                                            onClick={() => handleInsertTable(rowIndex + 1, colIndex + 1)}
-                                        />
-                                    );
-                                })}
+                                {Array.from({ length: TABLE_GRID_MAX }).map((_, rowIndex) => (
+                                    <div key={rowIndex} className="table-grid-row">
+                                        {Array.from({ length: TABLE_GRID_MAX }).map((_, colIndex) => {
+                                            const isHighlighted = rowIndex < hoverDims.rows && colIndex < hoverDims.cols;
+                                            return (
+                                                <button
+                                                    key={colIndex}
+                                                    type="button"
+                                                    className={isHighlighted ? 'table-grid-cell active' : 'table-grid-cell'}
+                                                    aria-label={`Insert table ${rowIndex + 1} by ${colIndex + 1}`}
+                                                    onMouseEnter={() => setHoverDims({ rows: rowIndex + 1, cols: colIndex + 1 })}
+                                                    onFocus={() => setHoverDims({ rows: rowIndex + 1, cols: colIndex + 1 })}
+                                                    onClick={() => handleInsertTable(rowIndex + 1, colIndex + 1)}
+                                                />
+                                            );
+                                        })}
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     )}
