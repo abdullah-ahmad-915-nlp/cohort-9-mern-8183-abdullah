@@ -15,6 +15,11 @@ body {
   outline: none;
 }
 
+.editor-content:focus-within {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
 .toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -77,6 +82,8 @@ body {
   height: 18px;
   border: 1px solid #ccc;
   background: #f9f9f9;
+  padding: 0;
+  cursor: pointer;
 }
 
 .table-grid-cell.active {

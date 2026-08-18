@@ -1,12 +1,20 @@
 import { createNote, findNotesByOwner, findNoteById, updateNoteById, deleteNoteById } from "../repositories/notesRepository.js";
 
 function isContentEmpty(html) {
-    const stripped = html.replace(/<[^>]*>/g, '').trim();
+    if (typeof html !== 'string') {
+        return true;
+    }
+
+    const stripped = html
+        .replace(/<[^>]*>/g, '')
+        .replace(/&(nbsp|#160|#x0*a0);/gi, ' ')
+        .replace(/[\u200B-\u200D\uFEFF]/g, '')
+        .trim();
     return stripped.length === 0;
 }
 
 async function createNoteForUser(userId, title, content) {
-    if (!title || isContentEmpty(content)) {
+    if (typeof title !== 'string' || !title.trim() || isContentEmpty(content)) {
         const err = new Error('Title and content are required');
         err.statusCode = 400;
         throw err;
@@ -40,7 +48,7 @@ async function getNoteForUser(userId, noteId) {
 }
 
 async function updateNoteForUser(userId, noteId, updates) {
-    const titleInvalid = updates.title !== undefined && !updates.title;
+    const titleInvalid = updates.title !== undefined && (typeof updates.title !== 'string' || !updates.title.trim());
     const contentInvalid = updates.content !== undefined && isContentEmpty(updates.content);
 
     if (titleInvalid || contentInvalid) {

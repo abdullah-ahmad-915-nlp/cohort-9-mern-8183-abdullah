@@ -37,10 +37,14 @@ function Dashboard() {
         fetchNotes();
     }, []);
 
-    function handleLogout() {
+    async function handleLogout() {
         setLogoutLoading(true);
-        logout();
-        setLogoutLoading(false);
+        try {
+            await logout();
+        }
+        finally {
+            setLogoutLoading(false);
+        }
     }
 
     function handleCreateNew() {

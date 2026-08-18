@@ -17,6 +17,7 @@ function NoteEditor() {
 
     const { id } = useParams();
     const isEditMode = Boolean(id);
+    const isMutating = saveLoading || deleteLoading;
 
     useEffect(() => {
         if (!isEditMode) {
@@ -121,20 +122,22 @@ function NoteEditor() {
                 <div>
                     <div>
                         <input
-                        type="text"
-                        placeholder="Enter Title"
-                        value={title}
-                        onChange={handleChangeTitle}
+                            type="text"
+                            aria-label="Note title"
+                            placeholder="Enter Title"
+                            value={title}
+                            onChange={handleChangeTitle}
+                            disabled={isMutating}
                         />
                         {isEditMode && (
-                            <button onClick={handleDelete} disabled={deleteLoading}>
+                            <button onClick={handleDelete} disabled={isMutating}>
                                 {deleteLoading ? 'Deleting...' : 'Delete'}
                             </button>
                         )}
-                        <button onClick={handleCancel} disabled={cancelLoading}>
+                        <button onClick={handleCancel} disabled={isMutating || cancelLoading}>
                             {cancelLoading ? 'Cancelling...' : 'Cancel'}
                         </button>
-                        <button onClick={handleSave} disabled={saveLoading}>
+                        <button onClick={handleSave} disabled={isMutating}>
                             {saveLoading ? 'Saving...' : 'Save'}
                         </button>
                     </div>
