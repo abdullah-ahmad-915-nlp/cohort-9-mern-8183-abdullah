@@ -13,7 +13,7 @@ function stripHtml(html) {
     return text.replace(/\s+/g, ' ').trim();
 }
 
-function NoteCard({ note, isEditing, isDeleting, onEdit, onDelete }) {
+function NoteCard({ note, isDeleting, onEdit, onDelete }) {
     const rawText = stripHtml(note.content);
 
     let preview;

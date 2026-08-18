@@ -24,6 +24,9 @@ function NoteEditor() {
         setFetchLoading(isEditMode);
 
         if (!isEditMode) {
+            setTitle('');
+            setContent('');
+            setError('');
             return;
         }
 
