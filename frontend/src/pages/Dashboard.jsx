@@ -10,6 +10,7 @@ function Dashboard() {
     const [fetchError, setFetchError] = useState('');
     const [fetchLoading, setFetchLoading] = useState(true);
     const [logoutLoading, setLogoutLoading] = useState(false);
+    const [logoutError, setLogoutError] = useState('');
     const [deletingIds, setDeletingIds] = useState(new Set());
 
     const { user, logout } = useAuth();
@@ -34,9 +35,13 @@ function Dashboard() {
     }, []);
 
     async function handleLogout() {
+        setLogoutError('');
         setLogoutLoading(true);
         try {
             await logout();
+        }
+        catch (err) {
+            setLogoutError(err.response?.data?.error || 'Failed to logout');
         }
         finally {
             setLogoutLoading(false);
@@ -82,6 +87,7 @@ function Dashboard() {
             <h1>My Notes App</h1>
             <h2>{user?.name}'s dashboard</h2>
             <button onClick={handleLogout} disabled={logoutLoading}>{logoutLoading ? 'Logging out...' : 'Logout'}</button>
+            {logoutError && <span role="alert">{logoutError}</span>}
             {fetchLoading ? (
                 <p>Loading...</p>
             ) : fetchError ? (

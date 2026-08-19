@@ -34,7 +34,7 @@ function AuthProvider({ children }) {
             await api.post('/auth/logout');
         }
         catch (err) {
-            // Empty
+            throw new Error('Failed to logout on the server');
         }
         finally {
             setUser(null);
