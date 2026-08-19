@@ -90,7 +90,6 @@ function Dashboard() {
             <h1>My Notes App</h1>
             <h2>{user?.name}'s dashboard</h2>
             <button onClick={handleLogout} disabled={logoutLoading}>{logoutLoading ? 'Logging out...' : 'Logout'}</button>
-            {logoutError && <span role="alert">{logoutError}</span>}
             {fetchLoading ? (
                 <p>Loading...</p>
             ) : fetchError ? (

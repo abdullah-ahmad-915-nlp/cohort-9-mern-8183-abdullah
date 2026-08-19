@@ -6,7 +6,7 @@ function stripHtml(html) {
         el.replaceWith(' ');
     });
 
-    const blockSelectors = 'p, h1, h2, h3, h4, h5, h6, li, tr, blockquote, pre, div';
+    const blockSelectors = 'p, h1, h2, h3, h4, h5, h6, li, tr, td, th, blockquote, pre, div';
     const blockElements = div.querySelectorAll(blockSelectors);
 
     blockElements.forEach((el) => {

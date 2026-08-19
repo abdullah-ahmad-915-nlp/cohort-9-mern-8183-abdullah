@@ -20,13 +20,13 @@ function NoteEditor() {
     const isMutating = saveLoading || deleteLoading;
 
     useEffect(() => {
+        setError('');
         setFetchError('');
         setFetchLoading(isEditMode);
 
         if (!isEditMode) {
             setTitle('');
             setContent('');
-            setError('');
             return;
         }
 
