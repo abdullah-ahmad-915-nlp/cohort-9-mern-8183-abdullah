@@ -9,6 +9,7 @@ function AuthProvider({ children }) {
     const [logoutError, setLogoutError] = useState('');
 
     async function register(name, email, password) {
+        setLogoutError('');
         try {
             await api.post('/auth/register', { name, email, password });
         }
@@ -18,6 +19,7 @@ function AuthProvider({ children }) {
     }
 
     async function login(email, password) {
+        setLogoutError('');
         try {
             await api.post('/auth/login', { email, password });
             await fetchCsrfToken();
