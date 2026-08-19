@@ -41,7 +41,7 @@ function Dashboard() {
             await logout();
         }
         catch (err) {
-            setLogoutError(err.response?.data?.error || 'Failed to logout');
+            setLogoutError(err.message || 'Failed to logout');
         }
         finally {
             setLogoutLoading(false);
