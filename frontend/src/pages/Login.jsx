@@ -46,24 +46,24 @@ function Login() {
                 <div>
                     <label htmlFor="email">Email</label>
                     <input
-                    type="email"
-                    id="email"
-                    placeholder="Enter email"
-                    value={email}
-                    onChange={handleChangeEmail}
-                    required
+                        type="email"
+                        id="email"
+                        placeholder="Enter email"
+                        value={email}
+                        onChange={handleChangeEmail}
+                        required
                     />
                 </div>
                 <div>
                     <label htmlFor="password">Password</label>
                     <input
-                    type="password"
-                    id="password"
-                    placeholder="Enter password"
-                    value={password}
-                    onChange={handleChangePassword}
-                    required
-                    minLength={6}
+                        type="password"
+                        id="password"
+                        placeholder="Enter password"
+                        value={password}
+                        onChange={handleChangePassword}
+                        required
+                        minLength={6}
                     />
                 </div>
                 <div>

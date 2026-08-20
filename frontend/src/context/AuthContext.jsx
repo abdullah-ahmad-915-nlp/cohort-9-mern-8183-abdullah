@@ -6,8 +6,10 @@ const AuthContext = createContext();
 function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [logoutError, setLogoutError] = useState('');
 
     async function register(name, email, password) {
+        setLogoutError('');
         try {
             await api.post('/auth/register', { name, email, password });
         }
@@ -17,6 +19,7 @@ function AuthProvider({ children }) {
     }
 
     async function login(email, password) {
+        setLogoutError('');
         try {
             await api.post('/auth/login', { email, password });
             await fetchCsrfToken();
@@ -30,11 +33,12 @@ function AuthProvider({ children }) {
     }
 
     async function logout() {
+        setLogoutError('');
         try {
             await api.post('/auth/logout');
         }
         catch (err) {
-            // Empty
+            setLogoutError('Failed to logout on the server');
         }
         finally {
             setUser(null);
@@ -65,7 +69,7 @@ function AuthProvider({ children }) {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, loading, register, login, logout }}>
+        <AuthContext.Provider value={{ user, loading, logoutError, register, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

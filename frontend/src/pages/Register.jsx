@@ -51,39 +51,39 @@ function Register() {
                 <div>
                     <label htmlFor="name">Name</label>
                     <input
-                    type="text"
-                    id="name"
-                    placeholder="Enter name"
-                    value={name}
-                    onChange={handleChangeName}
-                    required
-                    minLength={3}
-                    maxLength={20}
+                        type="text"
+                        id="name"
+                        placeholder="Enter name"
+                        value={name}
+                        onChange={handleChangeName}
+                        required
+                        minLength={3}
+                        maxLength={20}
                     />
                     <span>Must be 3-20 characters (both inclusive)</span>
                 </div>
                 <div>
                     <label htmlFor="email">Email</label>
                     <input
-                    type="email"
-                    id="email"
-                    placeholder="Enter email"
-                    value={email}
-                    onChange={handleChangeEmail}
-                    required
+                        type="email"
+                        id="email"
+                        placeholder="Enter email"
+                        value={email}
+                        onChange={handleChangeEmail}
+                        required
                     />
                     <span>Must be unique</span>
                 </div>
                 <div>
                     <label htmlFor="password">Password</label>
                     <input
-                    type="password"
-                    id="password"
-                    placeholder="Enter password"
-                    value={password}
-                    onChange={handleChangePassword}
-                    required
-                    minLength={6}
+                        type="password"
+                        id="password"
+                        placeholder="Enter password"
+                        value={password}
+                        onChange={handleChangePassword}
+                        required
+                        minLength={6}
                     />
                     <span>Minimum 6 characters</span>
                 </div>
