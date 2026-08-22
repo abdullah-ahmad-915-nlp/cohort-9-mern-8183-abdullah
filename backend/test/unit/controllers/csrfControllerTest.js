@@ -19,8 +19,8 @@ describe('csrfController', () => {
 
         const { getCsrfToken } = await esmock('../../../src/controllers/csrfController.js', {
             '../../../src/config/csrf.js': {
-                generateCsrfToken: generateCsrfTokenStub,
-            },
+                generateCsrfToken: generateCsrfTokenStub
+            }
         });
 
         const req = {};

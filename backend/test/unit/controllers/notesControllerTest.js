@@ -24,8 +24,8 @@ describe('notesController', () => {
 
             const { createNote } = await esmock('../../../src/controllers/notesController.js', {
                 '../../../src/services/notesService.js': {
-                    createNoteForUser: createNoteForUserStub,
-                },
+                    createNoteForUser: createNoteForUserStub
+                }
             });
 
             const req = mockReq({ body: { title: 'Test', content: 'Content' } });
@@ -45,8 +45,8 @@ describe('notesController', () => {
 
             const { createNote } = await esmock('../../../src/controllers/notesController.js', {
                 '../../../src/services/notesService.js': {
-                    createNoteForUser: sinon.stub().rejects(fakeErr),
-                },
+                    createNoteForUser: sinon.stub().rejects(fakeErr)
+                }
             });
 
             const req = mockReq({ body: { title: '', content: '' } });
@@ -66,8 +66,8 @@ describe('notesController', () => {
 
             const { getNotes } = await esmock('../../../src/controllers/notesController.js', {
                 '../../../src/services/notesService.js': {
-                    getNotesForUser: getNotesForUserStub,
-                },
+                    getNotesForUser: getNotesForUserStub
+                }
             });
 
             const req = mockReq();
@@ -87,8 +87,8 @@ describe('notesController', () => {
 
             const { getNote } = await esmock('../../../src/controllers/notesController.js', {
                 '../../../src/services/notesService.js': {
-                    getNoteForUser: getNoteForUserStub,
-                },
+                    getNoteForUser: getNoteForUserStub
+                }
             });
 
             const req = mockReq({ params: { id: 'note1' } });
@@ -107,8 +107,8 @@ describe('notesController', () => {
 
             const { getNote } = await esmock('../../../src/controllers/notesController.js', {
                 '../../../src/services/notesService.js': {
-                    getNoteForUser: sinon.stub().rejects(fakeErr),
-                },
+                    getNoteForUser: sinon.stub().rejects(fakeErr)
+                }
             });
 
             const req = mockReq({ params: { id: 'note1' } });
@@ -127,8 +127,8 @@ describe('notesController', () => {
 
             const { updateNote } = await esmock('../../../src/controllers/notesController.js', {
                 '../../../src/services/notesService.js': {
-                    updateNoteForUser: updateNoteForUserStub,
-                },
+                    updateNoteForUser: updateNoteForUserStub
+                }
             });
 
             const req = mockReq({ params: { id: 'note1' }, body: { title: 'Updated' } });
@@ -148,8 +148,8 @@ describe('notesController', () => {
 
             const { deleteNote } = await esmock('../../../src/controllers/notesController.js', {
                 '../../../src/services/notesService.js': {
-                    deleteNoteForUser: deleteNoteForUserStub,
-                },
+                    deleteNoteForUser: deleteNoteForUserStub
+                }
             });
 
             const req = mockReq({ params: { id: 'note1' } });
@@ -168,8 +168,8 @@ describe('notesController', () => {
 
             const { deleteNote } = await esmock('../../../src/controllers/notesController.js', {
                 '../../../src/services/notesService.js': {
-                    deleteNoteForUser: sinon.stub().rejects(fakeErr),
-                },
+                    deleteNoteForUser: sinon.stub().rejects(fakeErr)
+                }
             });
 
             const req = mockReq({ params: { id: 'note1' } });

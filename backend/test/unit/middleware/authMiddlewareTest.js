@@ -30,8 +30,8 @@ describe('authMiddleware', () => {
     it('returns 401 if the token is invalid or expired', async () => {
         const { authMiddleware } = await esmock('../../../src/middleware/authMiddleware.js', {
             jsonwebtoken: {
-                default: { verify: sinon.stub().throws(new Error('invalid token')) },
-            },
+                default: { verify: sinon.stub().throws(new Error('invalid token')) }
+            }
         });
 
         const req = { cookies: { token: 'badtoken' } };
@@ -47,11 +47,11 @@ describe('authMiddleware', () => {
     it('returns 401 if the decoded user no longer exists', async () => {
         const { authMiddleware } = await esmock('../../../src/middleware/authMiddleware.js', {
             jsonwebtoken: {
-                default: { verify: sinon.stub().returns({ userId: '123' }) },
+                default: { verify: sinon.stub().returns({ userId: '123' }) }
             },
             '../../../src/repositories/userRepository.js': {
-                findUserById: sinon.stub().resolves(null),
-            },
+                findUserById: sinon.stub().resolves(null)
+            }
         });
 
         const req = { cookies: { token: 'validtoken' } };
@@ -69,11 +69,11 @@ describe('authMiddleware', () => {
 
         const { authMiddleware } = await esmock('../../../src/middleware/authMiddleware.js', {
             jsonwebtoken: {
-                default: { verify: sinon.stub().returns({ userId: '123' }) },
+                default: { verify: sinon.stub().returns({ userId: '123' }) }
             },
             '../../../src/repositories/userRepository.js': {
-                findUserById: sinon.stub().rejects(dbErr),
-            },
+                findUserById: sinon.stub().rejects(dbErr)
+            }
         });
 
         const req = { cookies: { token: 'validtoken' } };
@@ -91,11 +91,11 @@ describe('authMiddleware', () => {
 
         const { authMiddleware } = await esmock('../../../src/middleware/authMiddleware.js', {
             jsonwebtoken: {
-                default: { verify: sinon.stub().returns({ userId: '123' }) },
+                default: { verify: sinon.stub().returns({ userId: '123' }) }
             },
             '../../../src/repositories/userRepository.js': {
-                findUserById: sinon.stub().resolves(fakeUser),
-            },
+                findUserById: sinon.stub().resolves(fakeUser)
+            }
         });
 
         const req = { cookies: { token: 'validtoken' } };

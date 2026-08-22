@@ -37,8 +37,8 @@ describe('notesService', () => {
 
             const { createNoteForUser } = await esmock('../../../src/services/notesService.js', {
                 '../../../src/repositories/notesRepository.js': {
-                    createNote: createNoteStub,
-                },
+                    createNote: createNoteStub
+                }
             });
 
             const note = await createNoteForUser('user1', 'My Note', 'Some content');
@@ -54,8 +54,8 @@ describe('notesService', () => {
 
             const { getNotesForUser } = await esmock('../../../src/services/notesService.js', {
                 '../../../src/repositories/notesRepository.js': {
-                    findNotesByOwner: findNotesByOwnerStub,
-                },
+                    findNotesByOwner: findNotesByOwnerStub
+                }
             });
 
             const notes = await getNotesForUser('user1');
@@ -69,8 +69,8 @@ describe('notesService', () => {
         it('throws 404 if the note does not exist', async () => {
             const { getNoteForUser } = await esmock('../../../src/services/notesService.js', {
                 '../../../src/repositories/notesRepository.js': {
-                    findNoteById: sinon.stub().resolves(null),
-                },
+                    findNoteById: sinon.stub().resolves(null)
+                }
             });
 
             try {
@@ -85,8 +85,8 @@ describe('notesService', () => {
         it('throws 403 if the note belongs to a different user', async () => {
             const { getNoteForUser } = await esmock('../../../src/services/notesService.js', {
                 '../../../src/repositories/notesRepository.js': {
-                    findNoteById: sinon.stub().resolves({ _id: 'note1', owner: { toString: () => 'user2' }, }),
-                },
+                    findNoteById: sinon.stub().resolves({ _id: 'note1', owner: { toString: () => 'user2' }, })
+                }
             });
 
             try {
@@ -103,8 +103,8 @@ describe('notesService', () => {
 
             const { getNoteForUser } = await esmock('../../../src/services/notesService.js', {
                 '../../../src/repositories/notesRepository.js': {
-                    findNoteById: sinon.stub().resolves(fakeNote),
-                },
+                    findNoteById: sinon.stub().resolves(fakeNote)
+                }
             });
 
             const note = await getNoteForUser('user1', 'note1');
@@ -143,8 +143,8 @@ describe('notesService', () => {
         it('throws 404 if the note does not exist', async () => {
             const { updateNoteForUser } = await esmock('../../../src/services/notesService.js', {
                 '../../../src/repositories/notesRepository.js': {
-                    findNoteById: sinon.stub().resolves(null),
-                },
+                    findNoteById: sinon.stub().resolves(null)
+                }
             });
 
             try {
@@ -159,8 +159,8 @@ describe('notesService', () => {
         it('throws 403 if the note belongs to a different user', async () => {
             const { updateNoteForUser } = await esmock('../../../src/services/notesService.js', {
                 '../../../src/repositories/notesRepository.js': {
-                    findNoteById: sinon.stub().resolves({ _id: 'note1', owner: { toString: () => 'user2' }, }),
-                },
+                    findNoteById: sinon.stub().resolves({ _id: 'note1', owner: { toString: () => 'user2' }, })
+                }
             });
 
             try {
@@ -178,8 +178,8 @@ describe('notesService', () => {
             const { updateNoteForUser } = await esmock('../../../src/services/notesService.js', {
                 '../../../src/repositories/notesRepository.js': {
                     findNoteById: sinon.stub().resolves({ _id: 'note1', owner: { toString: () => 'user1' }, }),
-                    updateNoteById: updateNoteByIdStub,
-                },
+                    updateNoteById: updateNoteByIdStub
+                }
             });
 
             const updated = await updateNoteForUser('user1', 'note1', { title: 'New Title' });
@@ -193,8 +193,8 @@ describe('notesService', () => {
         it('throws 404 if the note does not exist', async () => {
             const { deleteNoteForUser } = await esmock('../../../src/services/notesService.js', {
                 '../../../src/repositories/notesRepository.js': {
-                    findNoteById: sinon.stub().resolves(null),
-                },
+                    findNoteById: sinon.stub().resolves(null)
+                }
             });
 
             try {
@@ -209,8 +209,8 @@ describe('notesService', () => {
         it('throws 403 if the note belongs to a different user', async () => {
             const { deleteNoteForUser } = await esmock('../../../src/services/notesService.js', {
                 '../../../src/repositories/notesRepository.js': {
-                    findNoteById: sinon.stub().resolves({ _id: 'note1', owner: { toString: () => 'user2' }, }),
-                },
+                    findNoteById: sinon.stub().resolves({ _id: 'note1', owner: { toString: () => 'user2' }, })
+                }
             });
 
             try {
@@ -228,8 +228,8 @@ describe('notesService', () => {
             const { deleteNoteForUser } = await esmock('../../../src/services/notesService.js', {
                 '../../../src/repositories/notesRepository.js': {
                     findNoteById: sinon.stub().resolves({ _id: 'note1', owner: { toString: () => 'user1' }, }),
-                    deleteNoteById: deleteNoteByIdStub,
-                },
+                    deleteNoteById: deleteNoteByIdStub
+                }
             });
 
             const result = await deleteNoteForUser('user1', 'note1');
