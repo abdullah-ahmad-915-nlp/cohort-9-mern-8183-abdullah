@@ -22,8 +22,8 @@ describe('authController', () => {
 
             const { register } = await esmock('../../../src/controllers/authController.js', {
                 '../../../src/services/authService.js': {
-                    registerUser: registerUserStub,
-                },
+                    registerUser: registerUserStub
+                }
             });
 
             const req = { body: { name: 'Test', email: 'test@example.com', password: 'password123' } };
@@ -43,8 +43,8 @@ describe('authController', () => {
 
             const { register } = await esmock('../../../src/controllers/authController.js', {
                 '../../../src/services/authService.js': {
-                    registerUser: sinon.stub().rejects(fakeErr),
-                },
+                    registerUser: sinon.stub().rejects(fakeErr)
+                }
             });
 
             const req = { body: { name: '', email: '', password: '' } };
@@ -64,8 +64,8 @@ describe('authController', () => {
 
             const { login } = await esmock('../../../src/controllers/authController.js', {
                 '../../../src/services/authService.js': {
-                    loginUser: loginUserStub,
-                },  
+                    loginUser: loginUserStub
+                }
             });
 
             const req = { body: { email: 'test@example.com', password: 'password123' } };
@@ -91,8 +91,8 @@ describe('authController', () => {
 
             const { login } = await esmock('../../../src/controllers/authController.js', {
                 '../../../src/services/authService.js': {
-                    loginUser: sinon.stub().rejects(fakeErr),
-                },
+                    loginUser: sinon.stub().rejects(fakeErr)
+                }
             });
 
             const req = { body: { email: 'test@example.com', password: 'wrong' } };

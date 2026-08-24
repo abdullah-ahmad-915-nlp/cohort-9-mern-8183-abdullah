@@ -67,7 +67,7 @@ function Login() {
                     />
                 </div>
                 <div>
-                    {error && <span>{error}</span>}
+                    {error && <span role="alert">{error}</span>}
                 </div>
                 <div>
                     <button type="submit" disabled={loading}>

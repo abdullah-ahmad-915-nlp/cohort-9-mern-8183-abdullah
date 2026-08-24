@@ -38,6 +38,8 @@ function RichTextEditor({ content, onChange }) {
         extensions: [
             StarterKit.configure({
                 heading: { levels: [1, 2, 3, 4, 5, 6] },
+                link: false,
+                underline: false
             }),
             Underline,
             TextAlign.configure({ types: ['heading', 'paragraph'] }),
@@ -49,7 +51,7 @@ function RichTextEditor({ content, onChange }) {
             TableRow,
             TableCell,
             TableHeader,
-            ConfiguredImageResize,
+            ConfiguredImageResize
         ],
         content: content,
         onUpdate: ({ editor }) => {
@@ -72,8 +74,8 @@ function RichTextEditor({ content, onChange }) {
                 }
 
                 return false;
-            },
-        },
+            }
+        }
     });
 
     function handleSetLink() {

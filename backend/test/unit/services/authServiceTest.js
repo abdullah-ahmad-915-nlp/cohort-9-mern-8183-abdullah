@@ -23,8 +23,8 @@ describe('authService', () => {
         it('throws 409 if the email is already in use', async () => {
             const { registerUser } = await esmock ('../../../src/services/authService.js', {
                 '../../../src/repositories/userRepository.js': {
-                    findUserByEmail: sinon.stub().resolves({ _id: '123', email: 'test@example.com'}),
-                },
+                    findUserByEmail: sinon.stub().resolves({ _id: '123', email: 'test@example.com'})
+                }
             });
 
             try {
@@ -42,11 +42,11 @@ describe('authService', () => {
             const { registerUser } = await esmock ('../../../src/services/authService.js', {
                 '../../../src/repositories/userRepository.js': {
                     findUserByEmail: sinon.stub().resolves(null),
-                    createUser: sinon.stub().resolves(fakeUser),
+                    createUser: sinon.stub().resolves(fakeUser)
                 },
                 bcrypt: {
-                    hash: sinon.stub().resolves('hashedpassword'),
-                },
+                    hash: sinon.stub().resolves('hashedpassword')
+                }
             });
 
             const result = await registerUser('Test User', 'test@example.com', 'password123');
@@ -72,8 +72,8 @@ describe('authService', () => {
         it('throws 401 if no user is found for the email', async () => {
             const { loginUser } = await esmock('../../../src/services/authService.js', {
                 '../../../src/repositories/userRepository.js': {
-                    findUserByEmailWithPassword: sinon.stub().resolves(null),
-                },
+                    findUserByEmailWithPassword: sinon.stub().resolves(null)
+                }
             });
 
             try {
@@ -88,11 +88,11 @@ describe('authService', () => {
         it('throws 401 if the password does not match', async () => {
             const { loginUser } = await esmock('../../../src/services/authService.js', {
                 '../../../src/repositories/userRepository.js': {
-                    findUserByEmailWithPassword: sinon.stub().resolves({ _id: '123', password: 'hashedpassword'}),
+                    findUserByEmailWithPassword: sinon.stub().resolves({ _id: '123', password: 'hashedpassword'})
                 },
                 bcrypt: {
-                    compare: sinon.stub().resolves(false),
-                },
+                    compare: sinon.stub().resolves(false)
+                }
             });
 
             try {
@@ -107,14 +107,14 @@ describe('authService', () => {
         it('returns a token on successful login', async () => {
             const { loginUser } = await esmock('../../../src/services/authService.js', {
                 '../../../src/repositories/userRepository.js': {
-                    findUserByEmailWithPassword: sinon.stub().resolves({ _id: '123', password: 'hashedpassword'}),
+                    findUserByEmailWithPassword: sinon.stub().resolves({ _id: '123', password: 'hashedpassword'})
                 },
                 bcrypt: {
-                    compare: sinon.stub().resolves(true),
+                    compare: sinon.stub().resolves(true)
                 },
                 jsonwebtoken: {
-                    default: { sign: sinon.stub().returns('fake.jwt.token') },
-                },
+                    default: { sign: sinon.stub().returns('fake.jwt.token') }
+                }
             });
 
             const token = await loginUser('test@example.com', 'password123');

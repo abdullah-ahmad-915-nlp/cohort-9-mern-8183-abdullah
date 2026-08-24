@@ -88,7 +88,7 @@ function Register() {
                     <span>Minimum 6 characters</span>
                 </div>
                 <div>
-                    {error && <span>{error}</span>}
+                    {error && <span role="alert">{error}</span>}
                 </div>
                 <div>
                     <button type="submit" disabled={loading}>
