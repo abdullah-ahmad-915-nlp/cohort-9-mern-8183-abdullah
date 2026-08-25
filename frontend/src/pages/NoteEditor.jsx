@@ -1,25 +1,32 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { NotebookPen, Save, X, Trash2, Loader2 } from 'lucide-react';
 import { createNote, deleteNote, getNoteById, updateNote } from '../services/notesApi.js';
 import RichTextEditor from '../components/RichTextEditor.jsx';
+import '../styles/NoteEditor.css';
+import '../styles/AppHeader.css';
+import '../styles/Spinner.css';
 
 function NoteEditor() {
+    const { id } = useParams();
+    const isEditMode = Boolean(id);
+
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [error, setError] = useState('');
     const [fetchError, setFetchError] = useState('');
-    const [fetchLoading, setFetchLoading] = useState(true);
+    const [fetchLoading, setFetchLoading] = useState(isEditMode);
     const [saveLoading, setSaveLoading] = useState(false);
     const [cancelLoading, setCancelLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
+    const [prevId, setPrevId] = useState(id);
 
     const navigate = useNavigate();
 
-    const { id } = useParams();
-    const isEditMode = Boolean(id);
     const isMutating = saveLoading || deleteLoading;
 
-    useEffect(() => {
+    if (id !== prevId) {
+        setPrevId(id);
         setError('');
         setFetchError('');
         setFetchLoading(isEditMode);
@@ -27,6 +34,11 @@ function NoteEditor() {
         if (!isEditMode) {
             setTitle('');
             setContent('');
+        }
+    }
+
+    useEffect(() => {
+        if (!isEditMode) {
             return;
         }
 
@@ -61,7 +73,7 @@ function NoteEditor() {
         return () => {
             isCurrent = false;
         };
-    }, [id]);
+    }, [id, isEditMode]);
 
     function handleChangeTitle(e) {
         setTitle(e.target.value);
@@ -117,15 +129,26 @@ function NoteEditor() {
     }
 
     return (
-        <div>
-            <h1>My Notes App</h1>
+        <div className="note-editor-page">
+            <header className="app-header">
+                <div className="app-header-brand">
+                    <NotebookPen size={24} className="app-header-icon" aria-hidden="true" />
+                    <h1>My Notes App</h1>
+                </div>
+            </header>
+
             {fetchLoading ? (
-                <p>Loading...</p>
+                <div className="note-editor-state">
+                    <Loader2 size={28} className="spin" aria-hidden="true" />
+                    <p>Loading...</p>
+                </div>
             ) : fetchError ? (
-                <span role="alert">{fetchError}</span>
+                <div className="note-editor-state">
+                    <span role="alert" className="note-editor-error">{fetchError}</span>
+                </div>
             ) : (
-                <div>
-                    <div>
+                <div className="note-editor-card">
+                    <div className="note-editor-toolbar-row">
                         <input
                             type="text"
                             aria-label="Note title"
@@ -133,21 +156,27 @@ function NoteEditor() {
                             value={title}
                             onChange={handleChangeTitle}
                             disabled={isMutating}
+                            className="note-editor-title-input"
                         />
-                        {isEditMode && (
-                            <button onClick={handleDelete} disabled={isMutating}>
-                                {deleteLoading ? 'Deleting...' : 'Delete'}
+                        <div className="note-editor-actions">
+                            {isEditMode && (
+                                <button onClick={handleDelete} disabled={isMutating} className="btn btn-danger">
+                                    <Trash2 size={14} aria-hidden="true" />
+                                    {deleteLoading ? 'Deleting...' : 'Delete'}
+                                </button>
+                            )}
+                            <button onClick={handleCancel} disabled={isMutating || cancelLoading} className="btn btn-secondary">
+                                <X size={14} aria-hidden="true" />
+                                {cancelLoading ? 'Cancelling...' : 'Cancel'}
                             </button>
-                        )}
-                        <button onClick={handleCancel} disabled={isMutating || cancelLoading}>
-                            {cancelLoading ? 'Cancelling...' : 'Cancel'}
-                        </button>
-                        <button onClick={handleSave} disabled={isMutating}>
-                            {saveLoading ? 'Saving...' : 'Save'}
-                        </button>
+                            <button onClick={handleSave} disabled={isMutating} className="btn btn-primary">
+                                <Save size={14} aria-hidden="true" />
+                                {saveLoading ? 'Saving...' : 'Save'}
+                            </button>
+                        </div>
                     </div>
                     <div>
-                        {error && <span role="alert">{error}</span>}
+                        {error && <span role="alert" className="note-editor-error">{error}</span>}
                     </div>
                     <RichTextEditor
                         key={id || 'new'}

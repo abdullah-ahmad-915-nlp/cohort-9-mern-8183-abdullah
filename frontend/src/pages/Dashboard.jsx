@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
+import { NotebookPen, LogOut, Plus, FileText, Loader2 } from 'lucide-react';
 import { getNotes, deleteNote } from '../services/notesApi.js';
 import NoteCard from '../components/NoteCard.jsx';
+import '../styles/Dashboard.css';
+import '../styles/AppHeader.css';
+import '../styles/Spinner.css';
 
 function Dashboard() {
     const [notes, setNotes] = useState([]);
@@ -86,25 +90,55 @@ function Dashboard() {
     }
 
     return (
-        <div>
-            <h1>My Notes App</h1>
-            <h2>{user?.name}'s dashboard</h2>
-            <button onClick={handleLogout} disabled={logoutLoading}>{logoutLoading ? 'Logging out...' : 'Logout'}</button>
+        <div className="dashboard">
+            <header className="app-header">
+                <div className="app-header-brand">
+                    <NotebookPen size={24} className="app-header-icon" aria-hidden="true" />
+                    <h1>My Notes App</h1>
+                </div>
+                <div className="dashboard-user">
+                    <span className="dashboard-user-name">{user?.name}'s dashboard</span>
+                    <button
+                        onClick={handleLogout}
+                        disabled={logoutLoading}
+                        className="btn btn-secondary"
+                    >
+                        <LogOut size={16} aria-hidden="true" />
+                        {logoutLoading ? 'Logging out...' : 'Logout'}
+                    </button>
+                </div>
+            </header>
+
             {fetchLoading ? (
-                <p>Loading...</p>
+                <div className="dashboard-state">
+                    <Loader2 size={28} className="spin" aria-hidden="true" />
+                    <p>Loading...</p>
+                </div>
             ) : fetchError ? (
-                <span role="alert">{fetchError}</span>
+                <div className="dashboard-state">
+                    <span role="alert" className="dashboard-error">{fetchError}</span>
+                </div>
             ) : (
-                <div>
-                    <button onClick={handleCreateNew}>Create new note</button>
+                <div className="dashboard-content">
+                    <div className="dashboard-toolbar">
+                        <button onClick={handleCreateNew} className="btn btn-primary">
+                            <Plus size={16} aria-hidden="true" />
+                            Create new note
+                        </button>
+                    </div>
                     {notes.length === 0 ? (
-                        <p>No notes here. Create your first one!</p>
+                        <div className="dashboard-empty">
+                            <FileText size={40} className="dashboard-empty-icon" aria-hidden="true" />
+                            <p>No notes here. Create your first one!</p>
+                        </div>
                     ) : (
-                        <div>
+                        <div className="note-grid">
                             {notes.map(note => (
-                                <div key={note._id}>
+                                <div key={note._id} className="note-grid-item">
                                     {deleteErrors.has(note._id) && (
-                                        <span role="alert">{deleteErrors.get(note._id)}</span>
+                                        <span role="alert" className="dashboard-error note-error">
+                                            {deleteErrors.get(note._id)}
+                                        </span>
                                     )}
                                     <NoteCard
                                         note={note}
