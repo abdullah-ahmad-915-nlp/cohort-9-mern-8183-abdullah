@@ -63,10 +63,6 @@ function ToolbarButton({ icon: Icon, label, onClick, disabled, active }) {
     );
 }
 
-// A toolbar button showing a primary icon with a smaller Plus/Minus badge
-// layered in the corner, for actions like "add row" / "delete column" where
-// a single icon can't convey both the subject (row/column) and the verb
-// (add/remove).
 function ToolbarButtonDual({ icon: Icon, badge: Badge, label, onClick, disabled }) {
     return (
         <button
@@ -85,8 +81,6 @@ function ToolbarButtonDual({ icon: Icon, badge: Badge, label, onClick, disabled 
     );
 }
 
-// An icon-only button that toggles an adjacent dropdown panel open/closed,
-// used as the trigger for the highlight/heading/list menus.
 function IconDropdownTrigger({ icon: Icon, label, onClick, active }) {
     return (
         <button
@@ -283,13 +277,11 @@ function RichTextEditor({ content, onChange }) {
     return (
         <div>
             <div className="toolbar">
-                {/* Group 1: Undo, Redo */}
                 <div className="toolbar-group">
                     <ToolbarButton icon={Undo2} label="Undo (Ctrl+Z)" onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()} />
                     <ToolbarButton icon={Redo2} label="Redo (Ctrl+Y)" onClick={() => editor.chain().focus().redo().run()} disabled={!editor.can().redo()} />
                 </div>
 
-                {/* Group 2: Bold, italic, underline, strikethrough, highlight color, inline code */}
                 <div className="toolbar-group">
                     <ToolbarButton icon={Bold} label="Bold (Ctrl+B)" onClick={() => editor.chain().focus().toggleBold().run()} disabled={!editor.can().toggleBold()} active={editor.isActive('bold')} />
                     <ToolbarButton icon={Italic} label="Italic (Ctrl+I)" onClick={() => editor.chain().focus().toggleItalic().run()} disabled={!editor.can().toggleItalic()} active={editor.isActive('italic')} />
@@ -331,7 +323,6 @@ function RichTextEditor({ content, onChange }) {
                     <ToolbarButton icon={Code} label="Inline Code" onClick={() => editor.chain().focus().toggleCode().run()} disabled={!editor.can().toggleCode()} active={editor.isActive('code')} />
                 </div>
 
-                {/* Group 3: Heading, list, blockquote, code block */}
                 <div className="toolbar-group">
                     <div className="icon-dropdown">
                         <IconDropdownTrigger
@@ -410,7 +401,6 @@ function RichTextEditor({ content, onChange }) {
                     <ToolbarButton icon={SquareCode} label="Code Block (Ctrl+Alt+C)" onClick={() => editor.chain().focus().toggleCodeBlock().run()} active={editor.isActive('codeBlock')} />
                 </div>
 
-                {/* Group 4: Left, center, right, justify */}
                 <div className="toolbar-group">
                     <ToolbarButton icon={AlignLeft} label="Align Left" onClick={() => editor.chain().focus().setTextAlign('left').run()} active={editor.isActive({ textAlign: 'left' })} />
                     <ToolbarButton icon={AlignCenter} label="Align Center" onClick={() => editor.chain().focus().setTextAlign('center').run()} active={editor.isActive({ textAlign: 'center' })} />
@@ -418,13 +408,11 @@ function RichTextEditor({ content, onChange }) {
                     <ToolbarButton icon={AlignJustify} label="Justify" onClick={() => editor.chain().focus().setTextAlign('justify').run()} active={editor.isActive({ textAlign: 'justify' })} />
                 </div>
 
-                {/* Group 5: Link, unlink */}
                 <div className="toolbar-group">
                     <ToolbarButton icon={Link2} label="Insert Link" onClick={handleSetLink} active={editor.isActive('link')} />
                     <ToolbarButton icon={Unlink2} label="Remove Link" onClick={() => editor.chain().focus().unsetLink().run()} disabled={!editor.isActive('link')} />
                 </div>
 
-                {/* Group 6: Add image, delete image (disabled when image is not selected) */}
                 <div className="toolbar-group" style={{ position: 'relative' }}>
                     <ToolbarButton icon={ImagePlus} label="Add Image" onClick={() => setShowImageMenu((v) => !v)} />
                     {showImageMenu && (
@@ -449,7 +437,6 @@ function RichTextEditor({ content, onChange }) {
                     <ToolbarButton icon={ImageMinus} label="Delete Image" onClick={handleDeleteImage} disabled={!isImageActive} />
                 </div>
 
-                {/* Group 7: Table structure controls (disabled unless a table is selected, except Add Table) */}
                 <div className="toolbar-group" style={{ position: 'relative' }}>
                     <ToolbarButton icon={Grid2x2Plus} label="Add Table" onClick={() => setShowTablePicker((v) => !v)} />
                     {showTablePicker && (
