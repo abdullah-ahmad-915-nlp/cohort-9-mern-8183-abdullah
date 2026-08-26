@@ -1,12 +1,12 @@
 :root {
-  --color-bg: #EEF2ED;
-  --color-surface: #F7FAF6;
-  --color-text: #2C3F28;
-  --color-text-muted: #4F6E4B;
-  --color-accent: #2C3F28;
-  --color-accent-hover: #182213;
-  --color-accent-light: #DCE8DF;
-  --color-border: #D3DED0;
+  --color-bg: #E7F0E4;
+  --color-surface: #F5FAF3;
+  --color-text: #173D19;
+  --color-text-muted: #3D6B3A;
+  --color-accent: #1D5C24;
+  --color-accent-hover: #0F3D13;
+  --color-accent-light: #CFE9CC;
+  --color-border: #C5DEC1;
   --color-error: #B4453D;
 
   --font-ui: 'Inter', system-ui, sans-serif;

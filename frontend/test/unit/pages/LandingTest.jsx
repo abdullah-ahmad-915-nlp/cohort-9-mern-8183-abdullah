@@ -14,7 +14,7 @@ describe('Landing', () => {
     it('renders the app name', () => {
         renderLanding();
 
-        expect(screen.getByText('My Notes App')).toBeInTheDocument();
+        expect(screen.getByText('Noteverse')).toBeInTheDocument();
     });
 
     it('renders a link to the login page', () => {

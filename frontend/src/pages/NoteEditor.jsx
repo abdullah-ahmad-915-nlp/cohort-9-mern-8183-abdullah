@@ -1,11 +1,27 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { NotebookPen, Save, X, Trash2, Loader2 } from 'lucide-react';
+import { NotebookPen, Save, X, Trash2, Loader2, FileQuestion, ShieldAlert, AlertCircle } from 'lucide-react';
 import { createNote, deleteNote, getNoteById, updateNote } from '../services/notesApi.js';
 import RichTextEditor from '../components/RichTextEditor.jsx';
 import '../styles/NoteEditor.css';
 import '../styles/AppHeader.css';
 import '../styles/Spinner.css';
+
+const KNOWN_FETCH_ERRORS = {
+    'Note not found': () => <FileQuestion size={40} color='#B4453D' />,
+    'Not authorized to access this note': () => <ShieldAlert size={40} color='#B4453D' />,
+    'Failed to load note': () => <AlertCircle size={40} color='#B4453D' />
+};
+
+function resolveFetchError(rawMessage) {
+    const icon = KNOWN_FETCH_ERRORS[rawMessage];
+
+    if (icon) {
+        return { message: <p>{rawMessage}</p>, icon };
+    }
+
+    return { message: <p>Something went wrong</p>, icon: () => <AlertCircle size={40} color='#B4453D' /> };
+}
 
 function NoteEditor() {
     const { id } = useParams();
@@ -133,7 +149,7 @@ function NoteEditor() {
             <header className="app-header">
                 <div className="app-header-brand">
                     <NotebookPen size={24} className="app-header-icon" aria-hidden="true" />
-                    <h1>My Notes App</h1>
+                    <h1>Noteverse</h1>
                 </div>
             </header>
 
@@ -144,7 +160,15 @@ function NoteEditor() {
                 </div>
             ) : fetchError ? (
                 <div className="note-editor-state">
-                    <span role="alert" className="note-editor-error">{fetchError}</span>
+                    {(() => {
+                        const { message, icon: ErrorIcon } = resolveFetchError(fetchError);
+                        return (
+                            <>
+                                <ErrorIcon size={28} className="note-editor-error-icon" aria-hidden="true" />
+                                <span role="alert" className="note-editor-error">{message}</span>
+                            </>
+                        );
+                    })()}
                 </div>
             ) : (
                 <div className="note-editor-card">

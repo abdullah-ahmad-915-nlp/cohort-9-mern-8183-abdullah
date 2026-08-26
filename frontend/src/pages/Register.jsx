@@ -49,7 +49,7 @@ function Register() {
             <div className="auth-card">
                 <div className="auth-header">
                     <UserPlus size={28} className="auth-icon" aria-hidden="true" />
-                    <h1>My Notes App</h1>
+                    <h1>Noteverse</h1>
                     <p className="auth-subtitle">Create Your Account</p>
                 </div>
                 <form onSubmit={handleSubmit} className="auth-form">
@@ -77,10 +77,12 @@ function Register() {
                             <input
                                 type="email"
                                 id="email"
-                                placeholder="Enter email"
+                                placeholder="Enter email (e.g. name@example.com)"
                                 value={email}
                                 onChange={handleChangeEmail}
                                 required
+                                pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+                                title="Enter a valid email address (e.g. name@example.com)"
                             />
                         </div>
                         <span className="field-hint">Must be unique</span>

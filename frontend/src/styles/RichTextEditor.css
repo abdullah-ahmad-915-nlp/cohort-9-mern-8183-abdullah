@@ -246,6 +246,17 @@
   border-color: var(--color-accent);
 }
 
+.editor-content .ProseMirror blockquote {
+  margin: 1em 0;
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--color-accent);
+  color: var(--color-text-muted);
+}
+
+.editor-content .ProseMirror blockquote p {
+  margin: 0.25em 0;
+}
+
 .editor-content .ProseMirror table {
   border-collapse: collapse;
   table-layout: fixed;

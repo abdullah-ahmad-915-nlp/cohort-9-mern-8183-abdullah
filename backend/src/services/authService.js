@@ -2,9 +2,21 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { createUser, findUserByEmail, findUserByEmailWithPassword } from '../repositories/userRepository.js';
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function isValidEmailFormat(email) {
+    return EMAIL_REGEX.test(email);
+}
+
 async function registerUser(name, email, password) {
     if (!name || !email || !password) {
         const err = new Error('Please fill all the fields');
+        err.statusCode = 400;
+        throw err;
+    }
+
+    if (!isValidEmailFormat(email)) {
+        const err = new Error('Please enter a valid email address');
         err.statusCode = 400;
         throw err;
     }
@@ -40,6 +52,12 @@ async function registerUser(name, email, password) {
 async function loginUser(email, password) {
     if (!email || !password) {
         const err = new Error('Please fill all the fields');
+        err.statusCode = 400;
+        throw err;
+    }
+
+    if (!isValidEmailFormat(email)) {
+        const err = new Error('Please enter a valid email address');
         err.statusCode = 400;
         throw err;
     }

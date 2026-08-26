@@ -54,6 +54,31 @@ describe('authService', () => {
             expect(result).to.not.have.property('password');
             expect(result.email).to.equal('test@example.com');
         });
+
+        it('throws 400 if the email has no dot after the @ (e.g. missing a TLD)', async () => {
+            const { registerUser } = await esmock('../../../src/services/authService.js');
+
+            try {
+                await registerUser('Test User', 'test@gmail', 'password123');
+                expect.fail('Expected registerUser to throw');
+            }
+            catch (err) {
+                expect(err.statusCode).to.equal(400);
+                expect(err.message).to.equal('Please enter a valid email address');
+            }
+        });
+
+        it('throws 400 if the email has no @ symbol at all', async () => {
+            const { registerUser } = await esmock('../../../src/services/authService.js');
+
+            try {
+                await registerUser('Test User', 'testexample.com', 'password123');
+                expect.fail('Expected registerUser to throw');
+            }
+            catch (err) {
+                expect(err.statusCode).to.equal(400);
+            }
+        });
     });
 
     describe('loginUser', () => {
@@ -69,11 +94,24 @@ describe('authService', () => {
             }
         });
 
+        it('throws 400 if the email has no dot after the @ (e.g. missing a TLD)', async () => {
+            const { loginUser } = await esmock('../../../src/services/authService.js');
+
+            try {
+                await loginUser('test@gmail', 'password123');
+                expect.fail('Expected loginUser to throw');
+            }
+            catch (err) {
+                expect(err.statusCode).to.equal(400);
+                expect(err.message).to.equal('Please enter a valid email address');
+            }
+        });
+
         it('throws 401 if no user is found for the email', async () => {
             const { loginUser } = await esmock('../../../src/services/authService.js', {
                 '../../../src/repositories/userRepository.js': {
-                    findUserByEmailWithPassword: sinon.stub().resolves(null)
-                }
+                    findUserByEmailWithPassword: sinon.stub().resolves(null),
+                },
             });
 
             try {

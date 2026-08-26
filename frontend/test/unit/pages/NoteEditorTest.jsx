@@ -28,7 +28,7 @@ let mockParamsId;
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useNavigate: () => mockNavigate,
-    useParams: () => ({ id: mockParamsId })
+    useParams: () => ({ id: mockParamsId }),
 }));
 
 function renderEditor() {
@@ -211,6 +211,31 @@ describe('NoteEditor', () => {
                 const alert = screen.getByText('Title is required');
                 expect(alert).toHaveAttribute('role', 'alert');
             });
+        });
+    });
+
+    describe('fetch error sanitization', () => {
+        it('shows "Not authorized to access this note" verbatim (known-safe message)', async () => {
+            mockParamsId = '123';
+            getNoteById.mockRejectedValue({ response: { data: { error: 'Not authorized to access this note' } } });
+            renderEditor();
+
+            await waitFor(() => {
+                expect(screen.getByText('Not authorized to access this note')).toBeInTheDocument();
+            });
+        });
+
+        it('replaces an unrecognized backend error message with a generic one', async () => {
+            mockParamsId = '123';
+            getNoteById.mockRejectedValue({
+                response: { data: { error: 'Cast to ObjectId failed for value "abc" (type string) at path "_id" for model "Note"' } },
+            });
+            renderEditor();
+
+            await waitFor(() => {
+                expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+            });
+            expect(screen.queryByText(/Cast to ObjectId/)).not.toBeInTheDocument();
         });
     });
 });
