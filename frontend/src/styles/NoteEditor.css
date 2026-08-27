@@ -1,0 +1,70 @@
+.note-editor-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+
+.note-editor-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-5) 0;
+  color: var(--color-text-muted);
+}
+
+.note-editor-state .spin {
+  color: var(--color-accent);
+}
+
+.note-editor-error {
+  color: var(--color-error);
+  font-size: 0.9rem;
+}
+
+.note-editor-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-4);
+}
+
+.note-editor-toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.note-editor-title-input {
+  flex: 1;
+  min-width: 200px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  font-family: var(--font-ui);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--color-text);
+  padding: var(--space-1) 0;
+  transition: border-color var(--transition);
+}
+
+.note-editor-title-input:focus {
+  outline: none;
+  border-bottom-color: var(--color-accent);
+}
+
+.note-editor-title-input::placeholder {
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
+.note-editor-actions {
+  display: flex;
+  gap: var(--space-2);
+}

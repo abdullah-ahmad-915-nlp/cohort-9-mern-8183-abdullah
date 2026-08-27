@@ -1,3 +1,7 @@
+import { Pencil, Trash2, Loader2 } from 'lucide-react';
+import '../styles/NoteCard.css';
+import '../styles/Spinner.css';
+
 function stripHtml(html) {
     const div = document.createElement('div');
     div.innerHTML = html;
@@ -34,13 +38,27 @@ function NoteCard({ note, isDeleting, onEdit, onDelete }) {
     const formattedTime = new Date(note.updatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
 
     return (
-        <div>
-            <h3>{note.title}</h3>
-            <p>{preview}</p>
-            <span>{formattedDate}, {formattedTime}</span>
-            <div>
-                <button onClick={onEdit} disabled={isDeleting}>Edit</button>
-                <button onClick={onDelete} disabled={isDeleting}>{isDeleting ? 'Deleting...' : 'Delete'}</button>
+        <div className="note-card">
+            <div className="note-card-body">
+                <div className="note-card-text">
+                    <h3 className="note-card-title">{note.title}</h3>
+                    <p className="note-card-preview">{preview}</p>
+                </div>
+                <span className="note-card-date">{formattedDate}, {formattedTime}</span>
+            </div>
+            <div className="note-card-actions">
+                <button onClick={onEdit} disabled={isDeleting} className="btn btn-secondary note-card-btn">
+                    <Pencil size={14} aria-hidden="true" />
+                    Edit
+                </button>
+                <button onClick={onDelete} disabled={isDeleting} className="btn btn-danger note-card-btn">
+                    {isDeleting ? (
+                        <Loader2 size={14} className="spin" aria-hidden="true" />
+                    ) : (
+                        <Trash2 size={14} aria-hidden="true" />
+                    )}
+                    {isDeleting ? 'Deleting...' : 'Delete'}
+                </button>
             </div>
         </div>
     );

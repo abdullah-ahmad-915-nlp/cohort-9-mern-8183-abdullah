@@ -1,0 +1,67 @@
+.note-card {
+  display: flex;
+  flex-direction: column;
+  height: 240px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-3);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.note-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(44, 63, 40, 0.12);
+}
+
+.note-card-body {
+  flex: 1;
+  min-height: 0;
+  margin-bottom: var(--space-3);
+  display: flex;
+  flex-direction: column;
+}
+
+.note-card-text {
+  min-height: 0;
+}
+
+.note-card-title {
+  margin: 0 0 var(--space-1);
+  font-size: 1.05rem;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.note-card-preview {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.note-card-date {
+  margin-top: auto;
+  padding-top: var(--space-2);
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.note-card-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.note-card-btn {
+  flex: 1;
+  font-size: 0.85rem;
+  padding: var(--space-1) var(--space-2);
+}
