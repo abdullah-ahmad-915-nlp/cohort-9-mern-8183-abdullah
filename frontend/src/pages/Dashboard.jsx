@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import { NotebookPen, LogOut, Plus, FileText, Loader2, Search, X, ArrowUpDown, SearchX, ChevronDown, Check } from 'lucide-react';
@@ -31,6 +31,8 @@ function Dashboard() {
 
     const navigate = useNavigate();
 
+    const sortDropdownRef = useRef(null);
+
     useEffect(() => {
         async function fetchNotes() {
             try {
@@ -47,6 +49,32 @@ function Dashboard() {
 
         fetchNotes();
     }, []);
+
+    useEffect(() => {
+        if (!showSortMenu) {
+            return;
+        }
+
+        function handleClickOutside(e) {
+            if (sortDropdownRef.current && !sortDropdownRef.current.contains(e.target)) {
+                setShowSortMenu(false);
+            }
+        }
+
+        function handleEscape(e) {
+            if (e.key === 'Escape') {
+                setShowSortMenu(false);
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleEscape);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, [showSortMenu]);
 
     async function handleLogout() {
         setLogoutLoading(true);
@@ -113,36 +141,38 @@ function Dashboard() {
         setShowSortMenu(false);
     }
 
-    const trimmedQuery = searchQuery.trim().toLowerCase();
+    const visibleNotes = useMemo(() => {
+        const trimmedQuery = searchQuery.trim().toLowerCase();
 
-    const searchedNotes = trimmedQuery
-        ? notes.filter((note) => {
-            const titleMatch = note.title.toLowerCase().includes(trimmedQuery);
-            const contentMatch = stripHtml(note.content).toLowerCase().includes(trimmedQuery);
-            return titleMatch || contentMatch;
-        })
-        : notes;
+        const searchedNotes = trimmedQuery
+            ? notes.filter((note) => {
+                const titleMatch = note.title.toLowerCase().includes(trimmedQuery);
+                const contentMatch = stripHtml(note.content).toLowerCase().includes(trimmedQuery);
+                return titleMatch || contentMatch;
+            })
+            : notes;
 
-    const visibleNotes = [...searchedNotes].sort((a, b) => {
-        switch (sortBy) {
-            case 'updatedAt-asc':
-                return new Date(a.updatedAt) - new Date(b.updatedAt);
-            case 'title-asc':
-                return a.title.localeCompare(b.title);
-            case 'title-desc':
-                return b.title.localeCompare(a.title);
-            case 'updatedAt-desc':
-            default:
-                return new Date(b.updatedAt) - new Date(a.updatedAt);
-        }
-    });
+        return [...searchedNotes].sort((a, b) => {
+            switch (sortBy) {
+                case 'updatedAt-asc':
+                    return new Date(a.updatedAt) - new Date(b.updatedAt);
+                case 'title-asc':
+                    return a.title.localeCompare(b.title);
+                case 'title-desc':
+                    return b.title.localeCompare(a.title);
+                case 'updatedAt-desc':
+                default:
+                    return new Date(b.updatedAt) - new Date(a.updatedAt);
+            }
+        });
+    }, [notes, searchQuery, sortBy]);
 
     return (
         <div className="dashboard">
             <header className="app-header">
                 <div className="app-header-brand">
                     <NotebookPen size={24} className="app-header-icon" aria-hidden="true" />
-                    <h1>Noteverse</h1>
+                    <h1>My Notes App</h1>
                 </div>
                 <div className="dashboard-user">
                     <span className="dashboard-user-name">{user?.name}'s dashboard</span>
@@ -190,7 +220,7 @@ function Dashboard() {
                                     </button>
                                 )}
                             </div>
-                            <div className="sort-dropdown">
+                            <div className="sort-dropdown" ref={sortDropdownRef}>
                                 <button
                                     type="button"
                                     className="sort-dropdown-trigger"

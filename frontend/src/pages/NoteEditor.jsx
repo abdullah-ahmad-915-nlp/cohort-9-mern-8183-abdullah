@@ -7,20 +7,28 @@ import '../styles/NoteEditor.css';
 import '../styles/AppHeader.css';
 import '../styles/Spinner.css';
 
-const KNOWN_FETCH_ERRORS = {
-    'Note not found': () => <FileQuestion size={40} color='#B4453D' />,
-    'Not authorized to access this note': () => <ShieldAlert size={40} color='#B4453D' />,
-    'Failed to load note': () => <AlertCircle size={40} color='#B4453D' />
-};
+// Only these exact backend messages are shown to the user verbatim, each
+// paired with an icon that matches the failure. Anything else (including
+// raw database/driver errors like a Mongoose CastError) is replaced with a
+// generic message so internal error details never leak into the UI.
+// A Map (not a plain object) is used deliberately: a plain object literal
+// still inherits from Object.prototype, so a rawMessage of "__proto__"
+// would resolve to Object.prototype instead of undefined and crash when
+// rendered as a component. Map has no such inherited keys.
+const KNOWN_FETCH_ERRORS = new Map([
+    ['Note not found', FileQuestion],
+    ['Not authorized to access this note', ShieldAlert],
+    ['Failed to load note', AlertCircle],
+]);
 
 function resolveFetchError(rawMessage) {
-    const icon = KNOWN_FETCH_ERRORS[rawMessage];
+    const icon = KNOWN_FETCH_ERRORS.get(rawMessage);
 
     if (icon) {
-        return { message: <p>{rawMessage}</p>, icon };
+        return { message: rawMessage, icon };
     }
 
-    return { message: <p>Something went wrong</p>, icon: () => <AlertCircle size={40} color='#B4453D' /> };
+    return { message: 'Something went wrong', icon: AlertCircle };
 }
 
 function NoteEditor() {
@@ -35,12 +43,19 @@ function NoteEditor() {
     const [saveLoading, setSaveLoading] = useState(false);
     const [cancelLoading, setCancelLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
-    const [prevId, setPrevId] = useState(id);
 
     const navigate = useNavigate();
 
     const isMutating = saveLoading || deleteLoading;
 
+    // Reset state during render (not inside an effect) when `id` changes,
+    // by comparing against the id this component last rendered with. This
+    // is React's documented pattern for "adjusting state when a prop
+    // changes" (https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes).
+    // It replaces the previous effect-based reset and fixes the
+    // stale-error-on-note-switch regression covered by NoteEditorTest.jsx's
+    // id-change test, without ever calling setState inside an effect body.
+    const [prevId, setPrevId] = useState(id);
     if (id !== prevId) {
         setPrevId(id);
         setError('');
@@ -149,7 +164,7 @@ function NoteEditor() {
             <header className="app-header">
                 <div className="app-header-brand">
                     <NotebookPen size={24} className="app-header-icon" aria-hidden="true" />
-                    <h1>Noteverse</h1>
+                    <h1>My Notes App</h1>
                 </div>
             </header>
 
@@ -164,7 +179,7 @@ function NoteEditor() {
                         const { message, icon: ErrorIcon } = resolveFetchError(fetchError);
                         return (
                             <>
-                                <ErrorIcon size={28} className="note-editor-error-icon" aria-hidden="true" />
+                                <ErrorIcon size={40} color="#B4453D" aria-hidden="true" />
                                 <span role="alert" className="note-editor-error">{message}</span>
                             </>
                         );

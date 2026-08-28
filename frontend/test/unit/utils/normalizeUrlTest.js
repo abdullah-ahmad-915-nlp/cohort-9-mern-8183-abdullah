@@ -28,4 +28,16 @@ describe('normalizeUrl', () => {
     it('returns an empty string unchanged', () => {
         expect(normalizeUrl('')).toBe('');
     });
+
+    it('prepends https:// to a bare host:port instead of mistaking the host for a scheme', () => {
+        expect(normalizeUrl('localhost:3000')).toBe('https://localhost:3000');
+    });
+
+    it('prepends https:// to a domain with a port instead of mistaking it for a scheme', () => {
+        expect(normalizeUrl('example.com:8080')).toBe('https://example.com:8080');
+    });
+
+    it('leaves a tel: link unchanged', () => {
+        expect(normalizeUrl('tel:+15551234567')).toBe('tel:+15551234567');
+    });
 });
