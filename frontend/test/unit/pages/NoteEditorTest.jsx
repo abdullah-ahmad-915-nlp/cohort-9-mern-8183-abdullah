@@ -168,6 +168,31 @@ describe('NoteEditor', () => {
         });
     });
 
+    describe('cancel confirmation', () => {
+        it('asks for confirmation before navigating away when Cancel is clicked', async () => {
+            const user = userEvent.setup();
+            mockParamsId = undefined;
+            confirmSpy.mockReturnValue(true);
+            renderEditor();
+
+            await user.click(screen.getByText('Cancel'));
+
+            expect(confirmSpy).toHaveBeenCalledWith('You will lose all current changes. Continue?');
+            expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
+        });
+
+        it('does not navigate away when the cancel confirmation is declined', async () => {
+            const user = userEvent.setup();
+            mockParamsId = undefined;
+            confirmSpy.mockReturnValue(false);
+            renderEditor();
+
+            await user.click(screen.getByText('Cancel'));
+
+            expect(mockNavigate).not.toHaveBeenCalled();
+        });
+    });
+
     describe('switching notes without unmount (id change)', () => {
         it('resets fetchLoading, fetchError, and error when id changes to a different note', async () => {
             const user = userEvent.setup();

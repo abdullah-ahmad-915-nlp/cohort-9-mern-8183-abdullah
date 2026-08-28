@@ -96,6 +96,18 @@ describe('Dashboard', () => {
                 expect(screen.getByText('Failed to load notes')).toBeInTheDocument();
             });
         });
+
+        it('does not crash when a note from the API has a missing or non-string title/content', async () => {
+            getNotes.mockResolvedValue([
+                { _id: '1', title: null, content: undefined, updatedAt: '2026-01-15T10:30:00.000Z' },
+                { _id: '2', updatedAt: '2026-01-16T10:30:00.000Z' }
+            ]);
+            renderDashboard();
+
+            await waitFor(() => {
+                expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(2);
+            });
+        });
     });
 
     describe('note deletion', () => {
@@ -133,7 +145,7 @@ describe('Dashboard', () => {
             const user = userEvent.setup();
             getNotes.mockResolvedValue([
                 makeNote({ _id: '1', title: 'Note One' }),
-                makeNote({ _id: '2', title: 'Note Two' }),
+                makeNote({ _id: '2', title: 'Note Two' })
             ]);
             confirmSpy.mockReturnValue(true);
             deleteNote.mockRejectedValueOnce({ response: { data: { error: 'Cannot delete Note One' } } });
@@ -215,7 +227,7 @@ describe('Dashboard', () => {
             const user = userEvent.setup();
             getNotes.mockResolvedValue([
                 makeNote({ _id: '1', title: 'Grocery List', content: '<p>milk, eggs</p>' }),
-                makeNote({ _id: '2', title: 'Meeting Notes', content: '<p>discuss roadmap</p>' }),
+                makeNote({ _id: '2', title: 'Meeting Notes', content: '<p>discuss roadmap</p>' })
             ]);
             renderDashboard();
 
@@ -231,7 +243,7 @@ describe('Dashboard', () => {
             const user = userEvent.setup();
             getNotes.mockResolvedValue([
                 makeNote({ _id: '1', title: 'Note One', content: '<p>Contains the word ROADMAP here</p>' }),
-                makeNote({ _id: '2', title: 'Note Two', content: '<p>Nothing relevant</p>' }),
+                makeNote({ _id: '2', title: 'Note Two', content: '<p>Nothing relevant</p>' })
             ]);
             renderDashboard();
 

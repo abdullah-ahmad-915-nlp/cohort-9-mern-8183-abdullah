@@ -132,6 +132,12 @@ function NoteEditor() {
     }
 
     function handleCancel() {
+        const confirm = window.confirm('You will lose all current changes. Continue?');
+
+        if (!confirm) {
+            return;
+        }
+
         setCancelLoading(true);
         navigate('/dashboard');
         setCancelLoading(false);
@@ -164,7 +170,7 @@ function NoteEditor() {
             <header className="app-header">
                 <div className="app-header-brand">
                     <NotebookPen size={24} className="app-header-icon" aria-hidden="true" />
-                    <h1>My Notes App</h1>
+                    <h1>Noteverse</h1>
                 </div>
             </header>
 

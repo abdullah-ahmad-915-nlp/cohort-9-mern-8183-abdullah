@@ -16,6 +16,14 @@ const SORT_OPTIONS = [
     { value: 'title-desc', label: 'Z to A' },
 ];
 
+function normalizeNote(note) {
+    return {
+        ...note,
+        title: typeof note.title === 'string' ? note.title : '',
+        content: typeof note.content === 'string' ? note.content : ''
+    };
+}
+
 function Dashboard() {
     const [notes, setNotes] = useState([]);
     const [fetchError, setFetchError] = useState('');
@@ -37,7 +45,7 @@ function Dashboard() {
         async function fetchNotes() {
             try {
                 const data = await getNotes();
-                setNotes(data);
+                setNotes(data.map(normalizeNote));
             }
             catch (err) {
                 setFetchError(err.response?.data?.error || 'Failed to load notes');
@@ -172,7 +180,7 @@ function Dashboard() {
             <header className="app-header">
                 <div className="app-header-brand">
                     <NotebookPen size={24} className="app-header-icon" aria-hidden="true" />
-                    <h1>My Notes App</h1>
+                    <h1>Noteverse</h1>
                 </div>
                 <div className="dashboard-user">
                     <span className="dashboard-user-name">{user?.name}'s dashboard</span>

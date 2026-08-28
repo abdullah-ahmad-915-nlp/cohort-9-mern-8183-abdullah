@@ -82,6 +82,20 @@ describe('authService', () => {
             }
         });
 
+        it('throws 400 if the local part starts, ends, or has consecutive dots', async () => {
+            const { registerUser } = await esmock('../../../src/services/authService.js');
+
+            for (const badEmail of ['.user@example.com', 'user.@example.com', 'user..name@example.com']) {
+                try {
+                    await registerUser('Test User', badEmail, 'password123');
+                    expect.fail(`Expected registerUser to throw for ${badEmail}`);
+                }
+                catch (err) {
+                    expect(err.statusCode).to.equal(400);
+                }
+            }
+        });
+
         it('throws 400 if the domain has an empty label (consecutive dots)', async () => {
             const { registerUser } = await esmock('../../../src/services/authService.js');
 
