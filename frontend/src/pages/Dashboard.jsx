@@ -22,7 +22,7 @@ function normalizeNotes(data) {
     }
 
     return data
-        .filter((note) => note !== null && typeof note === 'object')
+        .filter((note) => note !== null && typeof note === 'object' && !Array.isArray(note))
         .map(normalizeNote);
 }
 

@@ -131,6 +131,19 @@ describe('Dashboard', () => {
             });
             expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(1);
         });
+
+        it('drops array entries too, since typeof [] === "object" would otherwise let them through', async () => {
+            getNotes.mockResolvedValue([
+                ['not', 'a', 'note'],
+                { _id: '1', title: 'Valid Note', content: '<p>hi</p>', updatedAt: '2026-01-15T10:30:00.000Z' }
+            ]);
+            renderDashboard();
+
+            await waitFor(() => {
+                expect(screen.getByText('Valid Note')).toBeInTheDocument();
+            });
+            expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(1);
+        });
     });
 
     describe('note deletion', () => {
