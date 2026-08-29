@@ -108,6 +108,29 @@ describe('Dashboard', () => {
                 expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(2);
             });
         });
+
+        it('does not crash when the API payload is not an array', async () => {
+            getNotes.mockResolvedValue({ notes: [] });
+            renderDashboard();
+
+            await waitFor(() => {
+                expect(screen.getByText('No notes here. Create your first one!')).toBeInTheDocument();
+            });
+        });
+
+        it('does not crash and drops null/non-object entries from the notes array', async () => {
+            getNotes.mockResolvedValue([
+                null,
+                'not-a-note',
+                { _id: '1', title: 'Valid Note', content: '<p>hi</p>', updatedAt: '2026-01-15T10:30:00.000Z' }
+            ]);
+            renderDashboard();
+
+            await waitFor(() => {
+                expect(screen.getByText('Valid Note')).toBeInTheDocument();
+            });
+            expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(1);
+        });
     });
 
     describe('note deletion', () => {

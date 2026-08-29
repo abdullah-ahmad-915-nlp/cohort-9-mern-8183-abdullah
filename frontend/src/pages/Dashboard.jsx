@@ -13,8 +13,18 @@ const SORT_OPTIONS = [
     { value: 'updatedAt-desc', label: 'Newest updated first' },
     { value: 'updatedAt-asc', label: 'Oldest updated first' },
     { value: 'title-asc', label: 'A to Z' },
-    { value: 'title-desc', label: 'Z to A' },
+    { value: 'title-desc', label: 'Z to A' }
 ];
+
+function normalizeNotes(data) {
+    if (!Array.isArray(data)) {
+        return [];
+    }
+
+    return data
+        .filter((note) => note !== null && typeof note === 'object')
+        .map(normalizeNote);
+}
 
 function normalizeNote(note) {
     return {
@@ -45,7 +55,7 @@ function Dashboard() {
         async function fetchNotes() {
             try {
                 const data = await getNotes();
-                setNotes(data.map(normalizeNote));
+                setNotes(normalizeNotes(data));
             }
             catch (err) {
                 setFetchError(err.response?.data?.error || 'Failed to load notes');
