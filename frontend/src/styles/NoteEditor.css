@@ -18,6 +18,10 @@
   color: var(--color-accent);
 }
 
+.note-editor-error-icon {
+  color: var(--color-error);
+}
+
 .note-editor-error {
   color: var(--color-error);
   font-size: 0.9rem;

@@ -1,11 +1,35 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { NotebookPen, Save, X, Trash2, Loader2 } from 'lucide-react';
+import { NotebookPen, Save, X, Trash2, Loader2, FileQuestion, ShieldAlert, AlertCircle } from 'lucide-react';
 import { createNote, deleteNote, getNoteById, updateNote } from '../services/notesApi.js';
 import RichTextEditor from '../components/RichTextEditor.jsx';
 import '../styles/NoteEditor.css';
 import '../styles/AppHeader.css';
 import '../styles/Spinner.css';
+
+// Only these exact backend messages are shown to the user verbatim, each
+// paired with an icon that matches the failure. Anything else (including
+// raw database/driver errors like a Mongoose CastError) is replaced with a
+// generic message so internal error details never leak into the UI.
+// A Map (not a plain object) is used deliberately: a plain object literal
+// still inherits from Object.prototype, so a rawMessage of "__proto__"
+// would resolve to Object.prototype instead of undefined and crash when
+// rendered as a component. Map has no such inherited keys.
+const KNOWN_FETCH_ERRORS = new Map([
+    ['Note not found', FileQuestion],
+    ['Not authorized to access this note', ShieldAlert],
+    ['Failed to load note', AlertCircle],
+]);
+
+function resolveFetchError(rawMessage) {
+    const icon = KNOWN_FETCH_ERRORS.get(rawMessage);
+
+    if (icon) {
+        return { message: rawMessage, icon };
+    }
+
+    return { message: 'Something went wrong', icon: AlertCircle };
+}
 
 function NoteEditor() {
     const { id } = useParams();
@@ -19,12 +43,19 @@ function NoteEditor() {
     const [saveLoading, setSaveLoading] = useState(false);
     const [cancelLoading, setCancelLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
-    const [prevId, setPrevId] = useState(id);
 
     const navigate = useNavigate();
 
     const isMutating = saveLoading || deleteLoading;
 
+    // Reset state during render (not inside an effect) when `id` changes,
+    // by comparing against the id this component last rendered with. This
+    // is React's documented pattern for "adjusting state when a prop
+    // changes" (https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes).
+    // It replaces the previous effect-based reset and fixes the
+    // stale-error-on-note-switch regression covered by NoteEditorTest.jsx's
+    // id-change test, without ever calling setState inside an effect body.
+    const [prevId, setPrevId] = useState(id);
     if (id !== prevId) {
         setPrevId(id);
         setError('');
@@ -101,6 +132,12 @@ function NoteEditor() {
     }
 
     function handleCancel() {
+        const confirm = window.confirm('You will lose all current changes. Continue?');
+
+        if (!confirm) {
+            return;
+        }
+
         setCancelLoading(true);
         navigate('/dashboard');
         setCancelLoading(false);
@@ -133,7 +170,7 @@ function NoteEditor() {
             <header className="app-header">
                 <div className="app-header-brand">
                     <NotebookPen size={24} className="app-header-icon" aria-hidden="true" />
-                    <h1>My Notes App</h1>
+                    <h1>Noteverse</h1>
                 </div>
             </header>
 
@@ -144,7 +181,15 @@ function NoteEditor() {
                 </div>
             ) : fetchError ? (
                 <div className="note-editor-state">
-                    <span role="alert" className="note-editor-error">{fetchError}</span>
+                    {(() => {
+                        const { message, icon: ErrorIcon } = resolveFetchError(fetchError);
+                        return (
+                            <>
+                                <ErrorIcon size={40} color="#B4453D" aria-hidden="true" />
+                                <span role="alert" className="note-editor-error">{message}</span>
+                            </>
+                        );
+                    })()}
                 </div>
             ) : (
                 <div className="note-editor-card">

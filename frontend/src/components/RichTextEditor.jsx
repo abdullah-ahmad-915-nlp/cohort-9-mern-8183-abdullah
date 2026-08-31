@@ -10,10 +10,11 @@ import { TaskItem } from '@tiptap/extension-task-item';
 import { Table, TableRow, TableCell, TableHeader } from '@tiptap/extension-table';
 import { ImageResize } from 'tiptap-extension-resize-image';
 import '../styles/RichTextEditor.css';
+import { normalizeUrl } from '../utils/normalizeUrl.js';
 import {
     Undo2, Redo2,
     Bold, Italic, Underline as UnderlineIcon, Strikethrough, Highlighter, Code,
-    Heading, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Pilcrow,
+    Heading, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6,
     List, ListOrdered, ListTodo, Quote, SquareCode,
     AlignLeft, AlignCenter, AlignRight, AlignJustify,
     Link2, Unlink2,
@@ -163,7 +164,7 @@ function RichTextEditor({ content, onChange }) {
             return;
         }
 
-        editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+        editor.chain().focus().extendMarkRange('link').setLink({ href: normalizeUrl(url) }).run();
     }
 
     function handleInsertImageUrl() {
@@ -174,7 +175,7 @@ function RichTextEditor({ content, onChange }) {
             return;
         }
 
-        editor.chain().focus().setImage({ src: url }).run();
+        editor.chain().focus().setImage({ src: normalizeUrl(url) }).run();
     }
 
     function handleUploadImageClick() {
@@ -353,7 +354,7 @@ function RichTextEditor({ content, onChange }) {
                                     aria-label="Paragraph (remove heading)"
                                     onClick={handleClearHeading}
                                 >
-                                    <Pilcrow size={16} aria-hidden="true" />
+                                    <Heading size={16} aria-hidden="true" />
                                 </button>
                             </div>
                         )}

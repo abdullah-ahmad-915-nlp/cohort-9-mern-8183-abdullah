@@ -7,8 +7,8 @@ function Landing() {
         <div className="landing">
             <div className="landing-content">
                 <NotebookPen size={40} className="landing-icon" aria-hidden="true" />
-                <h1>My Notes App</h1>
-                <p>Create, edit and manage your notes securely.</p>
+                <h1>Noteverse</h1>
+                <p>Note it down.</p>
                 <div className="landing-actions">
                     <Link to="/login" className="btn btn-primary">
                         Login

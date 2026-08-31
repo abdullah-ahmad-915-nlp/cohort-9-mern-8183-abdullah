@@ -54,6 +54,83 @@ describe('authService', () => {
             expect(result).to.not.have.property('password');
             expect(result.email).to.equal('test@example.com');
         });
+
+        it('throws 400 if the email has no dot after the @ (e.g. missing a TLD)', async () => {
+            const { registerUser } = await esmock('../../../src/services/authService.js');
+
+            try {
+                await registerUser('Test User', 'test@gmail', 'password123');
+                expect.fail('Expected registerUser to throw');
+            }
+            catch (err) {
+                expect(err.statusCode).to.equal(400);
+                expect(err.message).to.equal('Please enter a valid email address');
+            }
+        });
+
+        it('throws 400 if a domain label starts or ends with a hyphen', async () => {
+            const { registerUser } = await esmock('../../../src/services/authService.js');
+
+            for (const badEmail of ['test@-example.com', 'test@example-.com']) {
+                try {
+                    await registerUser('Test User', badEmail, 'password123');
+                    expect.fail(`Expected registerUser to throw for ${badEmail}`);
+                }
+                catch (err) {
+                    expect(err.statusCode).to.equal(400);
+                }
+            }
+        });
+
+        it('throws 400 if the local part starts, ends, or has consecutive dots', async () => {
+            const { registerUser } = await esmock('../../../src/services/authService.js');
+
+            for (const badEmail of ['.user@example.com', 'user.@example.com', 'user..name@example.com']) {
+                try {
+                    await registerUser('Test User', badEmail, 'password123');
+                    expect.fail(`Expected registerUser to throw for ${badEmail}`);
+                }
+                catch (err) {
+                    expect(err.statusCode).to.equal(400);
+                }
+            }
+        });
+
+        it('throws 400 if the domain has an empty label (consecutive dots)', async () => {
+            const { registerUser } = await esmock('../../../src/services/authService.js');
+
+            try {
+                await registerUser('Test User', 'test@example..com', 'password123');
+                expect.fail('Expected registerUser to throw');
+            }
+            catch (err) {
+                expect(err.statusCode).to.equal(400);
+            }
+        });
+
+        it('throws 400 if email is a non-string value that would otherwise coerce', async () => {
+            const { registerUser } = await esmock('../../../src/services/authService.js');
+
+            try {
+                await registerUser('Test User', ['test@example.com'], 'password123');
+                expect.fail('Expected registerUser to throw');
+            }
+            catch (err) {
+                expect(err.statusCode).to.equal(400);
+            }
+        });
+
+        it('throws 400 if the email has no @ symbol at all', async () => {
+            const { registerUser } = await esmock('../../../src/services/authService.js');
+
+            try {
+                await registerUser('Test User', 'testexample.com', 'password123');
+                expect.fail('Expected registerUser to throw');
+            }
+            catch (err) {
+                expect(err.statusCode).to.equal(400);
+            }
+        });
     });
 
     describe('loginUser', () => {
@@ -66,6 +143,19 @@ describe('authService', () => {
             }
             catch (err) {
                 expect(err.statusCode).to.equal(400);
+            }
+        });
+
+        it('throws 400 if the email has no dot after the @ (e.g. missing a TLD)', async () => {
+            const { loginUser } = await esmock('../../../src/services/authService.js');
+
+            try {
+                await loginUser('test@gmail', 'password123');
+                expect.fail('Expected loginUser to throw');
+            }
+            catch (err) {
+                expect(err.statusCode).to.equal(400);
+                expect(err.message).to.equal('Please enter a valid email address');
             }
         });
 
