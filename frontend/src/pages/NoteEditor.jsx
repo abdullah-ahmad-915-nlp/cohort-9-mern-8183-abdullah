@@ -205,16 +205,16 @@ function NoteEditor() {
                         />
                         <div className="note-editor-actions">
                             {isEditMode && (
-                                <button onClick={handleDelete} disabled={isMutating} className="btn btn-danger">
+                                <button type="button" onClick={handleDelete} disabled={isMutating} className="btn btn-danger">
                                     <Trash2 size={14} aria-hidden="true" />
                                     {deleteLoading ? 'Deleting...' : 'Delete'}
                                 </button>
                             )}
-                            <button onClick={handleCancel} disabled={isMutating || cancelLoading} className="btn btn-secondary">
+                            <button type="button" onClick={handleCancel} disabled={isMutating || cancelLoading} className="btn btn-secondary">
                                 <X size={14} aria-hidden="true" />
                                 {cancelLoading ? 'Cancelling...' : 'Cancel'}
                             </button>
-                            <button onClick={handleSave} disabled={isMutating} className="btn btn-primary">
+                            <button type="button" onClick={handleSave} disabled={isMutating} className="btn btn-primary">
                                 <Save size={14} aria-hidden="true" />
                                 {saveLoading ? 'Saving...' : 'Save'}
                             </button>

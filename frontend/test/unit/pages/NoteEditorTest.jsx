@@ -143,7 +143,7 @@ describe('NoteEditor', () => {
             confirmSpy.mockReturnValue(true);
             renderEditor();
 
-            await waitFor(() => expect(screen.getByText('Delete')).toBeInTheDocument());
+            expect(await screen.findByText('Delete')).toBeInTheDocument();
 
             await user.click(screen.getByText('Delete'));
 
@@ -160,7 +160,7 @@ describe('NoteEditor', () => {
             confirmSpy.mockReturnValue(false);
             renderEditor();
 
-            await waitFor(() => expect(screen.getByText('Delete')).toBeInTheDocument());
+            expect(await screen.findByText('Delete')).toBeInTheDocument();
 
             await user.click(screen.getByText('Delete'));
 
@@ -204,7 +204,7 @@ describe('NoteEditor', () => {
 
             updateNote.mockRejectedValueOnce({ response: { data: { error: 'Save failed for note 1' } } });
             await user.click(screen.getByText('Save'));
-            await waitFor(() => expect(screen.getByText('Save failed for note 1')).toBeInTheDocument());
+            expect(await screen.findByText('Save failed for note 1')).toBeInTheDocument();
 
             mockParamsId = '2';
             getNoteById.mockResolvedValueOnce({ title: 'Note Two', content: '<p>two</p>' });

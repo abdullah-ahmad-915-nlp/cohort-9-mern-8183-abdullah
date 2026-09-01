@@ -154,7 +154,7 @@ describe('Dashboard', () => {
             confirmSpy.mockReturnValue(true);
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Note One')).toBeInTheDocument());
+            expect(await screen.findByText('Note One')).toBeInTheDocument();
 
             await user.click(screen.getByText('Delete'));
 
@@ -169,7 +169,7 @@ describe('Dashboard', () => {
             confirmSpy.mockReturnValue(false);
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Note One')).toBeInTheDocument());
+            expect(await screen.findByText('Note One')).toBeInTheDocument();
 
             await user.click(screen.getByText('Delete'));
 
@@ -187,7 +187,7 @@ describe('Dashboard', () => {
             deleteNote.mockRejectedValueOnce({ response: { data: { error: 'Cannot delete Note One' } } });
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Note One')).toBeInTheDocument());
+            expect(await screen.findByText('Note One')).toBeInTheDocument();
 
             const deleteButtons = screen.getAllByText('Delete');
             await user.click(deleteButtons[0]);
@@ -208,10 +208,10 @@ describe('Dashboard', () => {
             deleteNote.mockResolvedValueOnce();
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Note One')).toBeInTheDocument());
+            expect(await screen.findByText('Note One')).toBeInTheDocument();
 
             await user.click(screen.getByText('Delete'));
-            await waitFor(() => expect(screen.getByText('Failed once')).toBeInTheDocument());
+            expect(await screen.findByText('Failed once')).toBeInTheDocument();
 
             await user.click(screen.getByText('Delete'));
 
@@ -229,7 +229,7 @@ describe('Dashboard', () => {
             mockLogout.mockReturnValue(new Promise((resolve) => { resolveLogout = resolve; }));
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Logout')).toBeInTheDocument());
+            expect(await screen.findByText('Logout')).toBeInTheDocument();
 
             user.click(screen.getByText('Logout'));
 
@@ -250,7 +250,7 @@ describe('Dashboard', () => {
             getNotes.mockResolvedValue([]);
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Logout')).toBeInTheDocument());
+            expect(await screen.findByText('Logout')).toBeInTheDocument();
 
             await user.click(screen.getByText('Logout'));
 
@@ -267,7 +267,7 @@ describe('Dashboard', () => {
             ]);
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Grocery List')).toBeInTheDocument());
+            expect(await screen.findByText('Grocery List')).toBeInTheDocument();
 
             await user.type(screen.getByLabelText('Search notes by title or content'), 'grocery');
 
@@ -283,7 +283,7 @@ describe('Dashboard', () => {
             ]);
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Note One')).toBeInTheDocument());
+            expect(await screen.findByText('Note One')).toBeInTheDocument();
 
             await user.type(screen.getByLabelText('Search notes by title or content'), 'roadmap');
 
@@ -296,7 +296,7 @@ describe('Dashboard', () => {
             getNotes.mockResolvedValue([makeNote({ title: 'Grocery List' })]);
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Grocery List')).toBeInTheDocument());
+            expect(await screen.findByText('Grocery List')).toBeInTheDocument();
 
             await user.type(screen.getByLabelText('Search notes by title or content'), 'nonexistent');
 
@@ -311,7 +311,7 @@ describe('Dashboard', () => {
             ]);
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Grocery List')).toBeInTheDocument());
+            expect(await screen.findByText('Grocery List')).toBeInTheDocument();
 
             const searchInput = screen.getByLabelText('Search notes by title or content');
             await user.type(searchInput, 'grocery');
@@ -332,7 +332,7 @@ describe('Dashboard', () => {
             ]);
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Older')).toBeInTheDocument());
+            expect(await screen.findByText('Older')).toBeInTheDocument();
 
             const titles = screen.getAllByRole('heading', { level: 3 }).map((el) => el.textContent);
             expect(titles).toEqual(['Newer', 'Older']);
@@ -346,7 +346,7 @@ describe('Dashboard', () => {
             ]);
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Older')).toBeInTheDocument());
+            expect(await screen.findByText('Older')).toBeInTheDocument();
 
             await user.click(screen.getByRole('button', { name: 'Sort notes' }));
             await user.click(screen.getByText('Oldest updated first'));
@@ -363,7 +363,7 @@ describe('Dashboard', () => {
             ]);
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Zebra')).toBeInTheDocument());
+            expect(await screen.findByText('Zebra')).toBeInTheDocument();
 
             await user.click(screen.getByRole('button', { name: 'Sort notes' }));
             await user.click(screen.getByText('A to Z'));
@@ -380,7 +380,7 @@ describe('Dashboard', () => {
             ]);
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Apple')).toBeInTheDocument());
+            expect(await screen.findByText('Apple')).toBeInTheDocument();
 
             await user.click(screen.getByRole('button', { name: 'Sort notes' }));
             await user.click(screen.getByText('Z to A'));
@@ -398,7 +398,7 @@ describe('Dashboard', () => {
             ]);
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Zebra Notes')).toBeInTheDocument());
+            expect(await screen.findByText('Zebra Notes')).toBeInTheDocument();
 
             await user.type(screen.getByLabelText('Search notes by title or content'), 'notes');
             await user.click(screen.getByRole('button', { name: 'Sort notes' }));
@@ -413,7 +413,7 @@ describe('Dashboard', () => {
             getNotes.mockResolvedValue([makeNote({ title: 'Only Note' })]);
             renderDashboard();
 
-            await waitFor(() => expect(screen.getByText('Only Note')).toBeInTheDocument());
+            expect(await screen.findByText('Only Note')).toBeInTheDocument();
 
             await user.click(screen.getByRole('button', { name: 'Sort notes' }));
             expect(screen.getByText('A to Z')).toBeInTheDocument();

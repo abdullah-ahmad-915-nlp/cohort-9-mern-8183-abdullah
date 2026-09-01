@@ -195,6 +195,7 @@ function Dashboard() {
                 <div className="dashboard-user">
                     <span className="dashboard-user-name">{user?.name}'s dashboard</span>
                     <button
+                        type="button"
                         onClick={handleLogout}
                         disabled={logoutLoading}
                         className="btn btn-secondary"
@@ -268,7 +269,7 @@ function Dashboard() {
                                 )}
                             </div>
                         </div>
-                        <button onClick={handleCreateNew} className="btn btn-primary">
+                        <button type="button" onClick={handleCreateNew} className="btn btn-primary">
                             <Plus size={16} aria-hidden="true" />
                             Create new note
                         </button>

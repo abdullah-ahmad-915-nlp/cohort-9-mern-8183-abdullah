@@ -6,7 +6,7 @@ function isContentEmpty(html) {
     }
 
     const stripped = html
-        .replace(/<[^>]*>/g, '')
+        .replace(/<[^<>]+>/g, '')
         .replace(/&(nbsp|#160|#x0*a0);/gi, ' ')
         .replace(/[\u200B-\u200D\uFEFF]/g, '')
         .trim();

@@ -36,30 +36,16 @@ describe('App', () => {
         expect(screen.queryByRole('alert')).not.toBeInTheDocument();
     });
 
-    it('renders the Landing page at the root path', () => {
+    it.each([
+        ['Landing page', '/'],
+        ['Login page', '/login'],
+        ['Register page', '/register']
+    ])('renders the %s at %s', (expectedText, path) => {
         useAuth.mockReturnValue({ logoutError: '' });
-        window.history.pushState({}, '', '/');
+        window.history.pushState({}, '', path);
 
         render(<App />);
 
-        expect(screen.getByText('Landing page')).toBeInTheDocument();
-    });
-
-    it('renders the Login page at /login', () => {
-        useAuth.mockReturnValue({ logoutError: '' });
-        window.history.pushState({}, '', '/login');
-
-        render(<App />);
-
-        expect(screen.getByText('Login page')).toBeInTheDocument();
-    });
-
-    it('renders the Register page at /register', () => {
-        useAuth.mockReturnValue({ logoutError: '' });
-        window.history.pushState({}, '', '/register');
-
-        render(<App />);
-
-        expect(screen.getByText('Register page')).toBeInTheDocument();
+        expect(screen.getByText(expectedText)).toBeInTheDocument();
     });
 });

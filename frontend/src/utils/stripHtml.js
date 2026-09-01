@@ -9,7 +9,7 @@ export function stripHtml(html) {
     const blockElements = doc.querySelectorAll(blockSelectors);
 
     blockElements.forEach((el) => {
-        el.insertAdjacentText('beforeend', ' ');
+        el.append(' ');
     });
 
     const text = doc.body.textContent || '';

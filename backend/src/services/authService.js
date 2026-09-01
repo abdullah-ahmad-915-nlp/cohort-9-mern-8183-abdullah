@@ -46,7 +46,8 @@ async function registerUser(name, email, password) {
         throw err;
     }
 
-    const { password: _password, ...userWithoutPassword } = user.toObject();
+    const userWithoutPassword = user.toObject();
+    delete userWithoutPassword.password;
     return userWithoutPassword;
 }
 

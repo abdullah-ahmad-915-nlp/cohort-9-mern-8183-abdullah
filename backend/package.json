@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "mocha --loader=esmock --recursive test/**/*Test.js"
+    "test": "mocha --loader=esmock --recursive test/**/*Test.js",
+    "test:coverage": "c8 --reporter=lcov --reporter=text npm test"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +26,7 @@
     "pino-http": "^11.0.0"
   },
   "devDependencies": {
+    "c8": "^12.0.0",
     "chai": "^6.2.2",
     "esmock": "^2.7.6",
     "mocha": "^11.7.6",

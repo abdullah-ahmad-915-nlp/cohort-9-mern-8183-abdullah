@@ -29,11 +29,11 @@ function NoteCard({ note, isDeleting, onEdit, onDelete }) {
                 <span className="note-card-date">{formattedDate}, {formattedTime}</span>
             </div>
             <div className="note-card-actions">
-                <button onClick={onEdit} disabled={isDeleting} className="btn btn-secondary note-card-btn">
+                <button type="button" onClick={onEdit} disabled={isDeleting} className="btn btn-secondary note-card-btn">
                     <Pencil size={14} aria-hidden="true" />
                     Edit
                 </button>
-                <button onClick={onDelete} disabled={isDeleting} className="btn btn-danger note-card-btn">
+                <button type="button" onClick={onDelete} disabled={isDeleting} className="btn btn-danger note-card-btn">
                     {isDeleting ? (
                         <Loader2 size={14} className="spin" aria-hidden="true" />
                     ) : (

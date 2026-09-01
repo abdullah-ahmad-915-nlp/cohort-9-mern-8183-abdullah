@@ -14,39 +14,17 @@ function makeNote(overrides = {}) {
 
 describe('NoteCard', () => {
     describe('stripHtml preview (via rendered output)', () => {
-        it('replaces <br> elements with spaces instead of concatenating text', () => {
-            const note = makeNote({ content: '<p>hello<br>world</p>' });
+        it.each([
+            ['replaces <br> elements with spaces instead of concatenating text', '<p>hello<br>world</p>', 'hello world'],
+            ['separates table cell content instead of concatenating it', '<table><tr><td>A</td><td>B</td></tr></table>', 'A B'],
+            ['separates block-level elements like paragraphs and headings with spaces', '<h1>Title</h1><p>Body text</p>', 'Title Body text'],
+            ['collapses repeated whitespace into a single space', '<p>hello</p>\n\n   <p>world</p>', 'hello world'],
+            ['strips tags with no surrounding text left behind', '<p><strong>bold</strong> and <em>italic</em></p>', 'bold and italic']
+        ])('%s', (_, content, expectedText) => {
+            const note = makeNote({ content });
             render(<NoteCard note={note} isDeleting={false} onEdit={() => {}} onDelete={() => {}} />);
 
-            expect(screen.getByText('hello world')).toBeInTheDocument();
-        });
-
-        it('separates table cell content instead of concatenating it', () => {
-            const note = makeNote({ content: '<table><tr><td>A</td><td>B</td></tr></table>' });
-            render(<NoteCard note={note} isDeleting={false} onEdit={() => {}} onDelete={() => {}} />);
-
-            expect(screen.getByText('A B')).toBeInTheDocument();
-        });
-
-        it('separates block-level elements like paragraphs and headings with spaces', () => {
-            const note = makeNote({ content: '<h1>Title</h1><p>Body text</p>' });
-            render(<NoteCard note={note} isDeleting={false} onEdit={() => {}} onDelete={() => {}} />);
-
-            expect(screen.getByText('Title Body text')).toBeInTheDocument();
-        });
-
-        it('collapses repeated whitespace into a single space', () => {
-            const note = makeNote({ content: '<p>hello</p>\n\n   <p>world</p>' });
-            render(<NoteCard note={note} isDeleting={false} onEdit={() => {}} onDelete={() => {}} />);
-
-            expect(screen.getByText('hello world')).toBeInTheDocument();
-        });
-
-        it('strips tags with no surrounding text left behind', () => {
-            const note = makeNote({ content: '<p><strong>bold</strong> and <em>italic</em></p>' });
-            render(<NoteCard note={note} isDeleting={false} onEdit={() => {}} onDelete={() => {}} />);
-
-            expect(screen.getByText('bold and italic')).toBeInTheDocument();
+            expect(screen.getByText(expectedText)).toBeInTheDocument();
         });
     });
 

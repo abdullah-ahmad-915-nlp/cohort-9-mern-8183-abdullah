@@ -418,11 +418,11 @@ function RichTextEditor({ content, onChange }) {
                     <ToolbarButton icon={ImagePlus} label="Add Image" onClick={() => setShowImageMenu((v) => !v)} />
                     {showImageMenu && (
                         <div className="dropdown-menu">
-                            <button className="dropdown-menu-item" onClick={handleInsertImageUrl}>
+                            <button type="button" className="dropdown-menu-item" onClick={handleInsertImageUrl}>
                                 <Globe size={14} aria-hidden="true" />
                                 From URL
                             </button>
-                            <button className="dropdown-menu-item" onClick={handleUploadImageClick}>
+                            <button type="button" className="dropdown-menu-item" onClick={handleUploadImageClick}>
                                 <Upload size={14} aria-hidden="true" />
                                 Upload from device
                             </button>
