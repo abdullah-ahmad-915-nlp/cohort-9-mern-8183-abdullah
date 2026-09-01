@@ -294,7 +294,7 @@ Create a `.env` file inside the `backend` directory:
 
 ```env
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/notes-app
+MONGO_URI=your-mongodb-connection-string
 NODE_ENV=development
 JWT_SECRET=your-secure-jwt-secret
 JWT_EXPIRES_IN=7d
