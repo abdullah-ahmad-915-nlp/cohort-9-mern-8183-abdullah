@@ -859,8 +859,6 @@ The following features can be added in future iterations:
 * Real-time note synchronization using Socket.IO
 * Note import/export
 * Tags and categories
-* Advanced filtering
-* Pagination for large note collections
 * Note archiving
 * Favorite/pinned notes
 * User profile management
